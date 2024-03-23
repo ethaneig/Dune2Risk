@@ -112,8 +112,7 @@ def main():
         # Draw territories
         for y, row in enumerate(territories):
             for x, territory in enumerate(row):
-                color = territory.color if territory.owner else WHITE
-                pygame.draw.rect(screen, color, (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
+                pygame.draw.rect(screen, territory.color, (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
                 if territory.troops > 0:
                     font = pygame.font.Font(None, 24)
                     text_surface = font.render(str(territory.troops), True, territory.owner.color)
