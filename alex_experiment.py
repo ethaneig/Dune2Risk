@@ -113,14 +113,11 @@ def attack(player: Player, attacker: Territory, defender: Territory):
         print("Attacker doesn't have enough troops to attack.")
         return
 
-    if attacker.location[0] != defender.location[0] + 1 and
-        attacker.location[0] != defender.location[0] - 1 and
-        attacker.location[1] != defender.location[1] + 1 and
-        attacker.location[1] != defender.location[1] - 1
+    if attacker.location[0] != defender.location[0] + 1 and attacker.location[0] != defender.location[0] - 1 and attacker.location[1] != defender.location[1] + 1 and attacker.location[1] != defender.location[1] - 1:
         print("Attack is not against a valid location.")
         return
 
-    if defender.owner == Player.name or defender.owner = None:
+    if defender.owner == Player.name or defender.owner == None:
         print("Attack is not against a valid player.")
         return
 
