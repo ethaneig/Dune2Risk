@@ -6,7 +6,14 @@ from enum import Enum
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
-color = [(255, 0, 0), (0, 0, 255), (0, 255, 0)]
+playercolors = [(255, 0, 0), (0, 0, 255), (0, 255, 0)]
+
+continentcolors = [(0, 0, 255),
+                   (121, 109, 77),
+    (118, 123, 73),
+    (123, 121, 92),
+    (107, 106, 72),
+    (112, 123, 83)]
 
 # Define constants
 SCREEN_WIDTH = 800
@@ -23,13 +30,14 @@ class Player:
         self.troops = 0
 
 class Territory:
-    def __init__(self, continent=None, troops=0, owner=None):
+    def __init__(self, continent=0, troops=0, owner=None):
         self.continent = continent
         self.troops = troops
         self.owner = owner
+        self.color = continentcolors[continent]
 
 def generate_grid(rows, cols):
-    grid = [[('w0', 0, None) for _ in range(cols)] for _ in range(rows)]  # Initialize grid with water ('w')
+    grid = [[(0, 0, None) for _ in range(cols)] for _ in range(rows)]  # Initialize grid with water ('w')
 
     def sum_territory(grid, country_label):
         territory_count = 0
@@ -44,12 +52,12 @@ def generate_grid(rows, cols):
             new_row, new_col = row + dr, col + dc
             if 0 <= new_row < rows and 0 <= new_col < cols:
                 cell = grid[new_row][new_col]
-                if cell[0] == 'w0' and sum_territory(grid, label) < random.randint(10, 20):
+                if cell[0] == 0 and sum_territory(grid, label) < random.randint(10, 20):
                     grid[new_row][new_col] = (label, 0, None)  # Set continent with 0 troops and no owner
                     generate_country(new_row, new_col, label)
 
-    num_countries = 6  # Random number of countries between 3 and 6
-    country_labels = ['c' + str(i) for i in range(1, num_countries + 1)]
+    num_countries = 4  # Random number of countries between 3 and 6
+    country_labels = [i for i in range(1, num_countries + 1)]
 
     for label in country_labels:
         start_row = random.randint(0, rows - 1)
@@ -69,8 +77,8 @@ def main():
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("Risk Game")
-    global color
-    players = [Player(f"Player {i+1}", (color[i])) for i in range(NUM_PLAYERS)]
+    global playercolors
+    players = [Player(f"Player {i+1}", (playercolors[i])) for i in range(NUM_PLAYERS)]
 
     territories = [[Territory() for _ in range(NUM_COLS)] for _ in range(NUM_ROWS)]
     # Assign territories to players (randomly for demonstration)
@@ -79,7 +87,7 @@ def main():
     for y in range(NUM_ROWS):
         for x in range(NUM_COLS):
             designation, troops, _ = grid[y][x]
-            if not designation.startswith('w'):
+            if not designation:
                 territories[y][x] = Territory(continent=designation, troops=troops, owner=random.choice(players))
             else:
                 territories[y][x] = Territory(continent=designation, troops=troops)
@@ -104,11 +112,11 @@ def main():
         # Draw territories
         for y, row in enumerate(territories):
             for x, territory in enumerate(row):
-                color = territory.owner.color if territory.owner else WHITE
+                color = territory.color if territory.owner else WHITE
                 pygame.draw.rect(screen, color, (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
                 if territory.troops > 0:
                     font = pygame.font.Font(None, 24)
-                    text_surface = font.render(str(territory.troops), True, BLACK)
+                    text_surface = font.render(str(territory.troops), True, territory.owner.color)
                     text_rect = text_surface.get_rect(center=(x * CELL_SIZE + CELL_SIZE // 2, y * CELL_SIZE + CELL_SIZE // 2))
                     screen.blit(text_surface, text_rect)
 
