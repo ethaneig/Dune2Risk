@@ -8,14 +8,18 @@ BLACK = (0, 0, 0)
 
 playercolors = [(255, 0, 0), (0, 0, 255), (0, 255, 0)]
 
-continentcolors = [(0, 0, 255),
-                   (121, 109, 77),
-    (118, 123, 73),
-    (123, 121, 92),
-    (107, 106, 72),
-    (112, 123, 83)]
+continentcolors =  [
+    (0, 0, 255), #blue water
+    (255, 0, 0),      # North America (Red)
+    (255, 165, 0),    # South America (Orange)
+    (255, 255, 0),    # Europe (Yellow)
+    (0, 128, 0),      # Africa (Green)
+    (128, 0, 128),     # Australia (Purple)
+    (173, 255, 230)  #asian
+]
 
 # Define constants
+num_countries = 6
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 CELL_SIZE = 40
@@ -30,7 +34,7 @@ class Player:
         self.troops = 0
 
 class Territory:
-    def __init__(self, continent=0, troops=0, owner=None):
+    def __init__(self, continent=0, troops=1, owner=None):
         self.continent = continent
         self.troops = troops
         self.owner = owner
@@ -56,7 +60,7 @@ def generate_grid(rows, cols):
                     grid[new_row][new_col] = (label, 0, None)  # Set continent with 0 troops and no owner
                     generate_country(new_row, new_col, label)
 
-    num_countries = 4  # Random number of countries between 3 and 6
+    global num_countries  # Random number of countries between 3 and 6
     country_labels = [i for i in range(1, num_countries + 1)]
 
     for label in country_labels:
@@ -87,8 +91,8 @@ def main():
     for y in range(NUM_ROWS):
         for x in range(NUM_COLS):
             designation, troops, _ = grid[y][x]
-            if not designation:
-                territories[y][x] = Territory(continent=designation, troops=troops, owner=random.choice(players))
+            if designation:
+                territories[y][x] = Territory(continent=designation, troops=1, owner=random.choice(players))
             else:
                 territories[y][x] = Territory(continent=designation, troops=troops)
 
@@ -112,6 +116,8 @@ def main():
         # Draw territories
         for y, row in enumerate(territories):
             for x, territory in enumerate(row):
+                if territory.continent:
+                    pygame.draw.rect(screen, (0,0,0),(x * CELL_SIZE - 1, y * CELL_SIZE - 1, CELL_SIZE + 1, CELL_SIZE + 1))
                 pygame.draw.rect(screen, territory.color, (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
                 if territory.troops > 0:
                     font = pygame.font.Font(None, 24)
