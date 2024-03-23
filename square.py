@@ -1,9 +1,10 @@
 class Square:
 
-  def __init__(self,row,col,piece=None):
+  def __init__(self,row,col,piece=None, land = 0):
     self.row = row
     self.col = col
     self.piece = piece
+    self.land = land
   def __eq__(self,other):
     return self.row==other.row and self.col==other.col
 

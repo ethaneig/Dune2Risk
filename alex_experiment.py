@@ -107,8 +107,9 @@ def draw_hud(screen, phase, player_turn):
     # Blit the HUD onto the screen
     screen.blit(hud_surface, (screen.get_width() - HUD_WIDTH, 0))
 
-def attack(player: Player, attacker: Territory, defender: Territory):
+def attack(attacker: Territory, defender: Territory):
     # Ensure attacker has at least 2 troops (1 for attacking and 1 for defense)
+    player = attacker.owner
     if attacker.troops < 2:
         print("Attacker doesn't have enough troops to attack.")
         return
@@ -117,11 +118,11 @@ def attack(player: Player, attacker: Territory, defender: Territory):
         print("Attack is not against a valid location.")
         return
 
-    if defender.owner == Player.name or defender.owner == None:
+    if defender.owner == player.name or defender.owner == None:
         print("Attack is not against a valid player.")
         return
 
-    if attacker.owner != Player.name:
+    if attacker.owner != player.name:
         print("Player does not control this territory.")
         return
 
@@ -233,6 +234,8 @@ def main():
                         text_surface = font.render(str(territory.troops), True, territory.owner.color)
                         text_rect = text_surface.get_rect(center=(cell_x * CELL_SIZE + CELL_SIZE // 2, cell_y * CELL_SIZE + CELL_SIZE // 2))
                         screen.blit(text_surface, text_rect)
+                    elif phase and territory.owner == players[player_turn]:
+                        attack(territory, territories[cell_y][cell_x + 1])
 
 
 
