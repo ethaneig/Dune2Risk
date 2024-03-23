@@ -1,12 +1,12 @@
 import pygame
 import random
+from enum import Enum
 
 # Define colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
-RED = (255, 0, 0)
-BLUE = (0, 0, 255)
-GREEN = (0, 255, 0)
+
+color = [(255, 0, 0), (0, 0, 255), (0, 255, 0)]
 
 # Define constants
 SCREEN_WIDTH = 800
@@ -14,7 +14,7 @@ SCREEN_HEIGHT = 600
 CELL_SIZE = 40
 NUM_ROWS = SCREEN_HEIGHT // CELL_SIZE
 NUM_COLS = SCREEN_WIDTH // CELL_SIZE
-NUM_PLAYERS = 5
+NUM_PLAYERS = 3
 
 class Player:
     def __init__(self, name, color):
@@ -69,8 +69,8 @@ def main():
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("Risk Game")
-
-    players = [Player(f"Player {i+1}", (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))) for i in range(NUM_PLAYERS)]
+    global color
+    players = [Player(f"Player {i+1}", (color[i])) for i in range(NUM_PLAYERS)]
 
     territories = [[Territory() for _ in range(NUM_COLS)] for _ in range(NUM_ROWS)]
     # Assign territories to players (randomly for demonstration)
@@ -112,71 +112,6 @@ def main():
                     text_rect = text_surface.get_rect(center=(x * CELL_SIZE + CELL_SIZE // 2, y * CELL_SIZE + CELL_SIZE // 2))
                     screen.blit(text_surface, text_rect)
 
-        pygame.display.flip()
-
-    pygame.quit()
-
-if __name__ == "__main__":
-    main()
-
-    pygame.init()
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-    pygame.display.set_caption("Risk Game")
-
-    players = [Player(f"Player {i+1}", (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))) for i in range(NUM_PLAYERS)]
-
-    territories = [[Territory() for _ in range(NUM_COLS)] for _ in range(NUM_ROWS)]
-    # Assign territories to players (randomly for demonstration)
-    for row in territories:
-        for territory in row:
-            territory.owner = random.choice(players)
-
-    running = True
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:  # Left mouse button
-                    x, y = event.pos
-                    cell_x = x // CELL_SIZE
-                    cell_y = y // CELL_SIZE
-                    territory = territories[cell_y][cell_x]
-                    if territory.owner == players[0]:  # Only allow player 1 to add troops (for demonstration)
-                        territory.troops += 1
-                        players[0].troops -= 1
-
-        screen.fill(BLACK)
-        plot_board(screen)
-        # Draw territories
-        for y, row in enumerate(territories):
-            for x, territory in enumerate(row):
-                color = territory.owner.color if territory.owner else WHITE
-                pygame.draw.rect(screen, color, (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
-                if territory.troops > 0:
-                    font = pygame.font.Font(None, 24)
-                    text_surface = font.render(str(territory.troops), True, BLACK)
-                    text_rect = text_surface.get_rect(center=(x * CELL_SIZE + CELL_SIZE // 2, y * CELL_SIZE + CELL_SIZE // 2))
-                    screen.blit(text_surface, text_rect)
-
-        pygame.display.flip()
-
-    pygame.quit()
-
-    pygame.init()
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-    pygame.display.set_caption("Risk Game")
-
-    grid = generate_grid(NUM_ROWS, NUM_COLS)
-
-    running = True
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-
-        screen.fill(WHITE)
-        plot_board(screen, grid)
         pygame.display.flip()
 
     pygame.quit()
