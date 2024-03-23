@@ -37,11 +37,12 @@ class Player:
         self.troops = 0
 
 class Territory:
-    def __init__(self, continent=0, troops=1, owner=None):
+    def __init__(self, continent=0, troops=1, owner=None, location=None):
         self.continent = continent
         self.troops = troops
         self.owner = owner
         self.color = continentcolors[continent]
+        self.location = location
 
 def generate_grid(rows, cols):
     grid = [[(0, 0, None) for _ in range(cols)] for _ in range(rows)]  # Initialize grid with water ('w')
@@ -82,6 +83,7 @@ def draw_grid(screen):
         for x in range(NUM_COLS):
             rect = pygame.Rect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
             pygame.draw.rect(screen, WHITE, rect, 1)
+
 def draw_hud(screen, phase, player_turn):
     # Create a surface for HUD
     hud_surface = pygame.Surface((HUD_WIDTH, HUD_HEIGHT))
@@ -105,6 +107,56 @@ def draw_hud(screen, phase, player_turn):
     # Blit the HUD onto the screen
     screen.blit(hud_surface, (screen.get_width() - HUD_WIDTH, 0))
 
+def attack(player: Player, attacker: Territory, defender: Territory):
+    # Ensure attacker has at least 2 troops (1 for attacking and 1 for defense)
+    if attacker.troops < 2:
+        print("Attacker doesn't have enough troops to attack.")
+        return
+
+    if attacker.location[0] != defender.location[0] + 1 and
+        attacker.location[0] != defender.location[0] - 1 and
+        attacker.location[1] != defender.location[1] + 1 and
+        attacker.location[1] != defender.location[1] - 1
+        print("Attack is not against a valid location.")
+        return
+
+    if defender.owner == Player.name or defender.owner = None:
+        print("Attack is not against a valid player.")
+        return
+
+    if attacker.owner != Player.name:
+        print("Player does not control this territory.")
+        return
+
+    # Simulate dice rolls for attacker and defender
+    attacker_dice_roll = [random.randint(1, 6) for _ in range(min(attacker.troops - 1, 3))]  # Up to 3 dice for attacker
+    defender_dice_roll = [random.randint(1, 6) for _ in range(min(defender.troops, 2))]  # Up to 2 dice for defender
+
+    # Sort dice rolls in descending order
+    attacker_dice_roll.sort(reverse=True)
+    defender_dice_roll.sort(reverse=True)
+
+    # Determine number of battles based on the number of dice rolled by attacker and defender
+    num_battles = min(len(attacker_dice_roll), len(defender_dice_roll))
+
+    # Compare dice rolls for each battle
+    for i in range(num_battles):
+        if attacker_dice_roll[i] > defender_dice_roll[i]:
+            # Attacker wins the battle, defender loses 1 troop
+            defender.troops -= 1
+        else:
+            # Defender wins the battle, attacker loses 1 troop
+            attacker.troops -= 1
+
+    # Check if defender lost all troops
+    if defender.troops <= 0:
+        # Attacker conquers the territory
+        defender.troops = max(1, attacker.troops - 1)  # Leave at least 1 troop in the conquered territory
+        defender.owner = attacker.owner
+        print(f"{attacker.owner} conquered {defender.continent}!")
+    else:
+        print("Defender successfully defended the territory.")
+
 def main():
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH+HUD_WIDTH, SCREEN_HEIGHT))
@@ -122,9 +174,9 @@ def main():
         for x in range(NUM_COLS):
             designation, troops, _ = grid[y][x]
             if designation:
-                territories[y][x] = Territory(continent=designation, troops=1, owner=random.choice(players))
+                territories[y][x] = Territory(continent=designation, troops=1, owner=random.choice(players), location = (y,x))
             else:
-                territories[y][x] = Territory(continent=designation, troops=troops)
+                territories[y][x] = Territory(continent=designation, troops=troops, location = (y,x))
 
     running = True
 
