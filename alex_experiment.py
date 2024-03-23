@@ -14,7 +14,7 @@ SCREEN_HEIGHT = 600
 CELL_SIZE = 40
 NUM_ROWS = SCREEN_HEIGHT // CELL_SIZE
 NUM_COLS = SCREEN_WIDTH // CELL_SIZE
-NUM_PLAYERS = 2
+NUM_PLAYERS = 5
 
 class Player:
     def __init__(self, name, color):
@@ -59,35 +59,6 @@ def generate_grid(rows, cols):
 
     return grid
 
-import pygame
-import random
-
-# Define colors
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-RED = (255, 0, 0)
-BLUE = (0, 0, 255)
-GREEN = (0, 255, 0)
-
-# Define constants
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
-CELL_SIZE = 50
-NUM_ROWS = SCREEN_HEIGHT // CELL_SIZE
-NUM_COLS = SCREEN_WIDTH // CELL_SIZE
-NUM_PLAYERS = 2
-
-class Player:
-    def __init__(self, name, color):
-        self.name = name
-        self.color = color
-        self.troops = 0
-
-class Territory:
-    def __init__(self, owner=None, troops=0):
-        self.owner = owner
-        self.troops = troops
-
 def draw_grid(screen):
     for y in range(NUM_ROWS):
         for x in range(NUM_COLS):
@@ -109,7 +80,7 @@ def main():
         for x in range(NUM_COLS):
             designation, troops, _ = grid[y][x]
             if not designation.startswith('w'):
-                territories[y][x] = Territory(continent=designation, troops=troops, owner=random.choice(country_labels))
+                territories[y][x] = Territory(continent=designation, troops=troops, owner=random.choice(players))
             else:
                 territories[y][x] = Territory(continent=designation, troops=troops)
 
