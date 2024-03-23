@@ -5,17 +5,20 @@ from enum import Enum
 # Define colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+HUD_WIDTH = 200
+HUD_HEIGHT = 600
+HUD_BG_COLOR = (200, 200, 200)
 
-playercolors = [(255, 0, 0), (0, 0, 255), (0, 255, 0)]
+playercolors = [(0,0,0), (150, 75, 0), (255, 0, 0)]
 
 continentcolors =  [
     (0, 0, 255), #blue water
-    (255, 0, 0),      # North America (Red)
+    (255,105,180),      # North America (pink)
     (255, 165, 0),    # South America (Orange)
     (255, 255, 0),    # Europe (Yellow)
     (0, 128, 0),      # Africa (Green)
     (128, 0, 128),     # Australia (Purple)
-    (173, 255, 230)  #asian
+    (0, 255, 255)  #asian(aqua)
 ]
 
 # Define constants
@@ -76,10 +79,23 @@ def draw_grid(screen):
         for x in range(NUM_COLS):
             rect = pygame.Rect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
             pygame.draw.rect(screen, WHITE, rect, 1)
+def draw_hud(screen):
+    # Create a surface for HUD
+    hud_surface = pygame.Surface((HUD_WIDTH, HUD_HEIGHT))
+    hud_surface.fill(HUD_BG_COLOR)
+
+    # Add text to the HUD (for demonstration purposes)
+    font = pygame.font.Font(None, 24)
+    text_surface = font.render("Player one's turn", True, (0, 0, 0))
+    text_rect = text_surface.get_rect(center=(HUD_WIDTH // 2, 50))
+    hud_surface.blit(text_surface, text_rect)
+
+    # Blit the HUD onto the screen
+    screen.blit(hud_surface, (screen.get_width() - HUD_WIDTH, 0))
 
 def main():
     pygame.init()
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    screen = pygame.display.set_mode((SCREEN_WIDTH+HUD_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("Risk Game")
     global playercolors
     players = [Player(f"Player {i+1}", (playercolors[i])) for i in range(NUM_PLAYERS)]
@@ -104,6 +120,9 @@ def main():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:  # Left mouse button
                     x, y = event.pos
+                    if(x > SCREEN_WIDTH):
+                        continue
+                        #do hud stuff(end attack, end placing troops)
                     cell_x = x // CELL_SIZE
                     cell_y = y // CELL_SIZE
                     territory = territories[cell_y][cell_x]
@@ -119,6 +138,7 @@ def main():
                 if territory.continent:
                     pygame.draw.rect(screen, (0,0,0),(x * CELL_SIZE - 1, y * CELL_SIZE - 1, CELL_SIZE + 1, CELL_SIZE + 1))
                 pygame.draw.rect(screen, territory.color, (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
+                draw_hud(screen)
                 if territory.troops > 0:
                     font = pygame.font.Font(None, 24)
                     text_surface = font.render(str(territory.troops), True, territory.owner.color)
