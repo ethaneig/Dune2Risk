@@ -69,6 +69,9 @@ def generate_grid(rows, cols):
     for label in country_labels:
         start_row = random.randint(0, rows - 1)
         start_col = random.randint(0, cols - 1)
+        while(grid[start_row][start_col][1]):
+            start_row = random.randint(0, rows - 1)
+            start_col = random.randint(0, cols - 1)
         grid[start_row][start_col] = (label, 0, None)  # Set starting continent with 0 troops and no owner
         generate_country(start_row, start_col, label)
 
@@ -79,15 +82,24 @@ def draw_grid(screen):
         for x in range(NUM_COLS):
             rect = pygame.Rect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
             pygame.draw.rect(screen, WHITE, rect, 1)
-def draw_hud(screen):
+def draw_hud(screen, phase, player_turn):
     # Create a surface for HUD
     hud_surface = pygame.Surface((HUD_WIDTH, HUD_HEIGHT))
     hud_surface.fill(HUD_BG_COLOR)
 
     # Add text to the HUD (for demonstration purposes)
     font = pygame.font.Font(None, 24)
-    text_surface = font.render("Player one's turn", True, (0, 0, 0))
+    if not player_turn:
+        text_surface = font.render("Player One's turn", True, (0, 0, 0))
+    else:
+        text_surface = font.render("Player Two's turn", True, (0, 0, 0))
     text_rect = text_surface.get_rect(center=(HUD_WIDTH // 2, 50))
+    hud_surface.blit(text_surface, text_rect)
+    if not phase:
+        text_surface = font.render("Place Troops", True, (0, 0, 0))
+    else:
+        text_surface = font.render("Choose Countries to Attack", True, (0, 0, 0))
+    text_rect = text_surface.get_rect(center=(HUD_WIDTH // 2, 100))
     hud_surface.blit(text_surface, text_rect)
 
     # Blit the HUD onto the screen
@@ -96,6 +108,8 @@ def draw_hud(screen):
 def main():
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH+HUD_WIDTH, SCREEN_HEIGHT))
+    screen.fill(BLACK)
+    draw_grid(screen)
     pygame.display.set_caption("Risk Game")
     global playercolors
     players = [Player(f"Player {i+1}", (playercolors[i])) for i in range(NUM_PLAYERS)]
@@ -130,15 +144,16 @@ def main():
                         territory.troops += 1
                         players[0].troops -= 1
 
-        screen.fill(BLACK)
-        draw_grid(screen)
         # Draw territories
         for y, row in enumerate(territories):
             for x, territory in enumerate(row):
-                if territory.continent:
-                    pygame.draw.rect(screen, (0,0,0),(x * CELL_SIZE - 1, y * CELL_SIZE - 1, CELL_SIZE + 1, CELL_SIZE + 1))
-                pygame.draw.rect(screen, territory.color, (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
-                draw_hud(screen)
+                if not territory.continent:
+                    pygame.draw.rect(screen, territory.color, (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
+                    continue
+                pygame.draw.rect(screen, (0,0,0),(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
+                pygame.draw.rect(screen, territory.color, (x * CELL_SIZE + 1, y * CELL_SIZE + 1, CELL_SIZE -2, CELL_SIZE-2))
+                draw_hud(screen, 0, 0)
+                pygame.draw.rect(screen, (255, 0, 0), (850, 300, 100, 50))
                 if territory.troops > 0:
                     font = pygame.font.Font(None, 24)
                     text_surface = font.render(str(territory.troops), True, territory.owner.color)
