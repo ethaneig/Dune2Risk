@@ -127,6 +127,25 @@ def main():
                 territories[y][x] = Territory(continent=designation, troops=troops)
 
     running = True
+
+
+    #draw initial territories
+    for y, row in enumerate(territories):
+        for x, territory in enumerate(row):
+            if not territory.continent:
+                pygame.draw.rect(screen, territory.color, (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
+                continue
+            pygame.draw.rect(screen, (0,0,0),(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
+            pygame.draw.rect(screen, territory.color, (x * CELL_SIZE + 1, y * CELL_SIZE + 1, CELL_SIZE -2, CELL_SIZE-2))
+            draw_hud(screen, 0, 0)
+            pygame.draw.rect(screen, (255, 0, 0), (850, 300, 100, 50))
+            if territory.troops > 0:
+                font = pygame.font.Font(None, 24)
+                text_surface = font.render(str(territory.troops), True, territory.owner.color)
+                text_rect = text_surface.get_rect(center=(x * CELL_SIZE + CELL_SIZE // 2, y * CELL_SIZE + CELL_SIZE // 2))
+                screen.blit(text_surface, text_rect)
+
+    #game loop
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -137,28 +156,26 @@ def main():
                     if(x > SCREEN_WIDTH):
                         continue
                         #do hud stuff(end attack, end placing troops)
+                    
+                    #otherwise add troops
                     cell_x = x // CELL_SIZE
                     cell_y = y // CELL_SIZE
                     territory = territories[cell_y][cell_x]
+
+                    #if it's the right player
                     if territory.owner == players[0]:  # Only allow player 1 to add troops (for demonstration)
                         territory.troops += 1
                         players[0].troops -= 1
 
-        # Draw territories
-        for y, row in enumerate(territories):
-            for x, territory in enumerate(row):
-                if not territory.continent:
-                    pygame.draw.rect(screen, territory.color, (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
-                    continue
-                pygame.draw.rect(screen, (0,0,0),(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
-                pygame.draw.rect(screen, territory.color, (x * CELL_SIZE + 1, y * CELL_SIZE + 1, CELL_SIZE -2, CELL_SIZE-2))
-                draw_hud(screen, 0, 0)
-                pygame.draw.rect(screen, (255, 0, 0), (850, 300, 100, 50))
-                if territory.troops > 0:
-                    font = pygame.font.Font(None, 24)
-                    text_surface = font.render(str(territory.troops), True, territory.owner.color)
-                    text_rect = text_surface.get_rect(center=(x * CELL_SIZE + CELL_SIZE // 2, y * CELL_SIZE + CELL_SIZE // 2))
-                    screen.blit(text_surface, text_rect)
+                        #redraw that tile
+                        pygame.draw.rect(screen, territory.color, (cell_x * CELL_SIZE + 1, cell_y * CELL_SIZE + 1, CELL_SIZE -2, CELL_SIZE-2))
+            
+                        font = pygame.font.Font(None, 24)
+                        text_surface = font.render(str(territory.troops), True, territory.owner.color)
+                        text_rect = text_surface.get_rect(center=(cell_x * CELL_SIZE + CELL_SIZE // 2, cell_y * CELL_SIZE + CELL_SIZE // 2))
+                        screen.blit(text_surface, text_rect)
+        
+            
 
         pygame.display.flip()
 

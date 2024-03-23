@@ -11,7 +11,6 @@ def main():
     checker = rand_list[:]
     checker.sort()
     while (checker != rand_list):
-        os.system('cls' if os.name == 'nt' else 'clear')
         lister(rand_list)
         timer = 0.1
         print("                ##")
