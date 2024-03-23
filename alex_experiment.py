@@ -5,7 +5,7 @@ from enum import Enum
 # Define colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
-HUD_WIDTH = 200
+HUD_WIDTH = 250
 HUD_HEIGHT = 600
 HUD_BG_COLOR = (200, 200, 200)
 
@@ -28,7 +28,7 @@ SCREEN_HEIGHT = 600
 CELL_SIZE = 40
 NUM_ROWS = SCREEN_HEIGHT // CELL_SIZE
 NUM_COLS = SCREEN_WIDTH // CELL_SIZE
-NUM_PLAYERS = 3
+NUM_PLAYERS = 2
 
 class Player:
     def __init__(self, name, color):
@@ -86,22 +86,22 @@ def draw_hud(screen, phase, player_turn):
     # Create a surface for HUD
     hud_surface = pygame.Surface((HUD_WIDTH, HUD_HEIGHT))
     hud_surface.fill(HUD_BG_COLOR)
-
     # Add text to the HUD (for demonstration purposes)
     font = pygame.font.Font(None, 24)
-    if not player_turn:
-        text_surface = font.render("Player One's turn", True, (0, 0, 0))
-    else:
-        text_surface = font.render("Player Two's turn", True, (0, 0, 0))
+    text_surface = font.render(f"Player {player_turn + 1}'s turn", True, (0, 0, 0))
     text_rect = text_surface.get_rect(center=(HUD_WIDTH // 2, 50))
     hud_surface.blit(text_surface, text_rect)
-    if not phase:
+    if phase == 0:
         text_surface = font.render("Place Troops", True, (0, 0, 0))
     else:
         text_surface = font.render("Choose Countries to Attack", True, (0, 0, 0))
     text_rect = text_surface.get_rect(center=(HUD_WIDTH // 2, 100))
     hud_surface.blit(text_surface, text_rect)
 
+    pygame.draw.rect(hud_surface, (255, 0, 0), (50, 300, 150, 50))
+    text_surface = font.render("End Action", True, (0, 0, 0))
+    text_rect = text_surface.get_rect(center=(HUD_WIDTH // 2, 325))
+    hud_surface.blit(text_surface, text_rect)
     # Blit the HUD onto the screen
     screen.blit(hud_surface, (screen.get_width() - HUD_WIDTH, 0))
 
@@ -138,7 +138,6 @@ def main():
             pygame.draw.rect(screen, (0,0,0),(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
             pygame.draw.rect(screen, territory.color, (x * CELL_SIZE + 1, y * CELL_SIZE + 1, CELL_SIZE -2, CELL_SIZE-2))
             draw_hud(screen, 0, 0)
-            pygame.draw.rect(screen, (255, 0, 0), (850, 300, 100, 50))
             if territory.troops > 0:
                 font = pygame.font.Font(None, 24)
                 text_surface = font.render(str(territory.troops), True, territory.owner.color)
@@ -146,6 +145,8 @@ def main():
                 screen.blit(text_surface, text_rect)
 
     #game loop
+    player_turn = 0
+    phase = 0
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -154,28 +155,37 @@ def main():
                 if event.button == 1:  # Left mouse button
                     x, y = event.pos
                     if(x > SCREEN_WIDTH):
+                        if(x > 850 and x < 950 and y > 300 and y < 350):
+                            if phase == 1:
+                                player_turn += 1
+                                if(player_turn == NUM_PLAYERS):
+                                    player_turn = 0
+                                phase = 0
+                            else:
+                                phase = 1
+                            draw_hud(screen, phase, player_turn)
                         continue
                         #do hud stuff(end attack, end placing troops)
-                    
+
                     #otherwise add troops
                     cell_x = x // CELL_SIZE
                     cell_y = y // CELL_SIZE
                     territory = territories[cell_y][cell_x]
 
                     #if it's the right player
-                    if territory.owner == players[0]:  # Only allow player 1 to add troops (for demonstration)
+                    if territory.owner == players[player_turn] and not phase:  # Only allow player 1 to add troops (for demonstration)
                         territory.troops += 1
-                        players[0].troops -= 1
+                        players[player_turn].troops -= 1
 
                         #redraw that tile
                         pygame.draw.rect(screen, territory.color, (cell_x * CELL_SIZE + 1, cell_y * CELL_SIZE + 1, CELL_SIZE -2, CELL_SIZE-2))
-            
+
                         font = pygame.font.Font(None, 24)
                         text_surface = font.render(str(territory.troops), True, territory.owner.color)
                         text_rect = text_surface.get_rect(center=(cell_x * CELL_SIZE + CELL_SIZE // 2, cell_y * CELL_SIZE + CELL_SIZE // 2))
                         screen.blit(text_surface, text_rect)
-        
-            
+
+
 
         pygame.display.flip()
 
