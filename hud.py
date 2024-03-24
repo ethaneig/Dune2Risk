@@ -6,10 +6,8 @@ import copy
 # Define colors
 HUD_WIDTH = 250
 HUD_HEIGHT = 600
-HUD_BG_COLOR = (200, 200, 200)
+HUD_BG_COLOR = (255, 255, 255)
 playercolors = [(255, 0, 0), (0,0,0), (255,105,180), (0, 0, 255)]
-
-
 class Sound:
   def __init__(self,path):
     self.path = path
@@ -103,10 +101,13 @@ def attack(screen, attacker, defender):
         text_rect = text_surface.get_rect(center=(925, 265))
         screen.blit(text_surface, text_rect)
 
-def draw_hud(screen, phase, player_turn):
+def draw_hud(screen, phase, player_turn, img):
     # Create a surface for HUD
     hud_surface = pygame.Surface((HUD_WIDTH, HUD_HEIGHT))
     hud_surface.fill(HUD_BG_COLOR)
+    img_center = (HUD_WIDTH // 2, 160)
+    texture_rect = img[player_turn].get_rect(center = img_center)
+    hud_surface.blit(img[player_turn],texture_rect)
     # Add text to the HUD (for demonstration purposes)
     font = pygame.font.Font(None, 24)
     color = playercolors[player_turn]
