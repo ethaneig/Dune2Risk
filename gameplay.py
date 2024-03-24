@@ -6,8 +6,8 @@ class Player:
         self.troops = 0
         self.territories = []
     
-    def update_territories():
-        self.territories = [territory for territory in territory if territory.owner == self]
+    def update_territories(territories):
+        self.territories = [territory for territory in territories if territory.owner == self]
 
 class Continent:
     def __init__(self, name):
