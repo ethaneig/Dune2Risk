@@ -172,16 +172,18 @@ def main():
 
 
     running = True
-    texture=os.path.join(f'Start.png')
+    texture=os.path.join(f'knife_chip_shatter.jpg')
     img2 = pygame.image.load(texture)
     img2 = pygame.transform.scale(img2, (1050, 600))
     img_center = (525, 300)
     texture_rect = img2.get_rect(center = img_center)
     screen.blit(img2,texture_rect)
-    font = pygame.font.Font("Dune_Rise.ttf", 12)
+    font = pygame.font.Font(None, 24)
     text_surface = font.render(f"Press click to start", True, (0,0,0))
     text_rect = text_surface.get_rect(center=(400, 300))
     screen.blit(text_surface, text_rect)
+    sound = Sound(os.path.join('lisanalgaib.mp3'))
+    sound.play()
     pygame.display.flip()
     while(running):
         for event in pygame.event.get():
@@ -203,7 +205,7 @@ def main():
             pygame.draw.rect(screen, territory.color, (x * CELL_SIZE + 1, y * CELL_SIZE + 1, CELL_SIZE -2, CELL_SIZE-2))
             draw_hud(screen, 0, 0, img)
             if territory.troops > 0:
-                font = pygame.font.Font("Dune_Rise.ttf", 12)
+                font = pygame.font.Font(None, 24)
                 text_surface = font.render(str(territory.troops), True, territory.owner.color)
                 text_rect = text_surface.get_rect(center=(x * CELL_SIZE + CELL_SIZE // 2, y * CELL_SIZE + CELL_SIZE // 2))
                 screen.blit(text_surface, text_rect)
@@ -213,7 +215,7 @@ def main():
     phase = 0
     selected_attacker = None
     mx_troops = max_troops(players[player_turn], territories, NUM_PLAYERS)
-    font = pygame.font.Font("Dune_Rise.ttf", 12)
+    font = pygame.font.Font(None, 19)
     pygame.draw.rect(screen, WHITE, (800, 225, 250, 30))
     text_surface = font.render(f"Troops left to place: {mx_troops}", True, (0, 0, 0))
     text_rect = text_surface.get_rect(center=(925, 250))
@@ -239,7 +241,7 @@ def main():
                                 phase = 1
                             draw_hud(screen, phase, player_turn, img)
                             if phase == 0:
-                                font = pygame.font.Font("Dune_Rise.ttf", 12)
+                                font = pygame.font.Font(None, 19)
                                 pygame.draw.rect(screen, WHITE, (800, 225, 250, 30))
                                 text_surface = font.render(f"Troops left to place: {mx_troops}", True, (0, 0, 0))
                                 text_rect = text_surface.get_rect(center=(925, 250))
@@ -271,7 +273,7 @@ def main():
                             selected_attacker.troops = 1
 
                             pygame.draw.rect(screen, selected_attacker.color, (attackx * CELL_SIZE + 1, attacky * CELL_SIZE + 1, CELL_SIZE -2, CELL_SIZE-2))
-                            ont = pygame.font.Font("Dune_Rise.ttf", 12)
+                            font = pygame.font.Font(None, 24)
                             text_surface = font.render(str(selected_attacker.troops), True, selected_attacker.owner.color)
                             text_rect = text_surface.get_rect(center=(attackx * CELL_SIZE + CELL_SIZE // 2, attacky * CELL_SIZE + CELL_SIZE // 2))
                             screen.blit(text_surface, text_rect)
@@ -289,13 +291,13 @@ def main():
                             selected_attacker.troops = 1
 
                         pygame.draw.rect(screen, selected_attacker.color, (attackx * CELL_SIZE + 1, attacky * CELL_SIZE + 1, CELL_SIZE -2, CELL_SIZE-2))
-                        font = pygame.font.Font("Dune_Rise.ttf", 10)
+                        font = pygame.font.Font(None, 24)
                         text_surface = font.render(str(selected_attacker.troops), True, selected_attacker.owner.color)
                         text_rect = text_surface.get_rect(center=(attackx * CELL_SIZE + CELL_SIZE // 2, attacky * CELL_SIZE + CELL_SIZE // 2))
                         screen.blit(text_surface, text_rect)
 
                         pygame.draw.rect(screen, new_territory.color, (cell_x * CELL_SIZE + 1, cell_y * CELL_SIZE + 1, CELL_SIZE -2, CELL_SIZE-2))
-                        font = pygame.font.Font("Dune_Rise.ttf", 10)
+                        font = pygame.font.Font(None, 24)
                         text_surface = font.render(str(new_territory.troops), True, new_territory.owner.color)
                         text_rect = text_surface.get_rect(center=(cell_x * CELL_SIZE + CELL_SIZE // 2, cell_y * CELL_SIZE + CELL_SIZE // 2))
                         screen.blit(text_surface, text_rect)
@@ -307,7 +309,7 @@ def main():
                     elif territory.owner == players[player_turn] and mx_troops > 0 and not phase:
                         territory.troops += 1
                         mx_troops -= 1
-                        font = pygame.font.Font("Dune_Rise.ttf", 12)
+                        font = pygame.font.Font(None, 19)
                         pygame.draw.rect(screen, WHITE, (800, 225, 250, 30))
                         text_surface = font.render(f"Troops left to place: {mx_troops}", True, (0, 0, 0))
                         text_rect = text_surface.get_rect(center=(925, 250))
@@ -316,7 +318,7 @@ def main():
                         #redraw that tile
                         pygame.draw.rect(screen, territory.color, (cell_x * CELL_SIZE + 1, cell_y * CELL_SIZE + 1, CELL_SIZE -2, CELL_SIZE-2))
 
-                        font = pygame.font.Font("Dune_Rise.ttf", 12)
+                        font = pygame.font.Font(None, 24)
                         text_surface = font.render(str(territory.troops), True, territory.owner.color)
                         text_rect = text_surface.get_rect(center=(cell_x * CELL_SIZE + CELL_SIZE // 2, cell_y * CELL_SIZE + CELL_SIZE // 2))
                         screen.blit(text_surface, text_rect)
@@ -329,13 +331,13 @@ def main():
                         attack(screen, selected_attacker, territory)
 
                         pygame.draw.rect(screen, selected_attacker.color, (attackx * CELL_SIZE + 1, attacky * CELL_SIZE + 1, CELL_SIZE -2, CELL_SIZE-2))
-                        font = pygame.font.Font("Dune_Rise.ttf", 12)
+                        font = pygame.font.Font(None, 24)
                         text_surface = font.render(str(selected_attacker.troops), True, selected_attacker.owner.color)
                         text_rect = text_surface.get_rect(center=(attackx * CELL_SIZE + CELL_SIZE // 2, attacky * CELL_SIZE + CELL_SIZE // 2))
                         screen.blit(text_surface, text_rect)
 
                         pygame.draw.rect(screen, territory.color, (cell_x * CELL_SIZE + 1, cell_y * CELL_SIZE + 1, CELL_SIZE -2, CELL_SIZE-2))
-                        font = pygame.font.Font("Dune_Rise.ttf", 12)
+                        font = pygame.font.Font(None, 24)
                         text_surface = font.render(str(territory.troops), True, territory.owner.color)
                         text_rect = text_surface.get_rect(center=(cell_x * CELL_SIZE + CELL_SIZE // 2, cell_y * CELL_SIZE + CELL_SIZE // 2))
                         screen.blit(text_surface, text_rect)
