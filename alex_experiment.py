@@ -237,7 +237,9 @@ def main():
                             new_territory.troops += selected_attacker.troops - 1
                             selected_attacker.troops = 1
                         else:
-                            attack(screen, selected_attacker, new_territory)
+                            while(selected_attacker.troops > 1 or new_territory.troops > 0)
+                                attack(screen, selected_attacker, new_territory)
+                            selected_attacker.troops = 1
 
                         pygame.draw.rect(screen, selected_attacker.color, (attackx * CELL_SIZE + 1, attacky * CELL_SIZE + 1, CELL_SIZE -2, CELL_SIZE-2))
                         font = pygame.font.Font(None, 24)
