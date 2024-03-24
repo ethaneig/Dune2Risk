@@ -39,6 +39,7 @@ class Player:
         self.color = color
         self.troops = 0
         self.territories = []
+        self.gained = 0
 
     def update_territories():
         self.territories = [territory for territory in territory if territory.owner == self]
@@ -47,7 +48,7 @@ class Continent:
     def __init__(self, name, territories):
         self.name = name
         self.territories = territories
-        self.owned = 0
+        self.owner = -1
         self.score = len(self.territories) // 2
 
     def add_territory(self, territory):
@@ -57,7 +58,7 @@ class Continent:
         for territory in self.territories:
             if territory.owner != player:
                 return False
-        self.owned = players.index(player)
+        self.owner = players.index(player)
         return True
 
 class Territory:
@@ -108,11 +109,10 @@ def draw_grid(screen):
             pygame.draw.rect(screen, WHITE, rect, 1)
 
 def max_troops(player: Player, territories, continents, num_players):
-
-    mx_trps = player.troops
-
     # 1 additional troop for every 3 territories above start
-    mx_trps += (player.territories - len(territories) // num_players) // 3
+    mx_trps = 3
+
+    mx_trps += max(0, player.gained // 3)
 
     # Continent troop bonus
     for continent in continents:
@@ -149,12 +149,6 @@ def main():
                 continents[designation - 1].add_territory(territories[y][x])
             else:
                 territories[y][x] = Territory(continent=designation, troops=troops, location = (y,x))
-
-    # generate continents
-    continents = list()
-
-    for continent in range(1,7):
-        continents.append(Continent(continent, territories))
 
     running = True
 
@@ -203,9 +197,13 @@ def main():
                     territory = territories[cell_y][cell_x]
 
                     #if it's the right player
-                    if territory.owner == players[player_turn] and not phase:  # Only allow player 1 to add troops (for demonstration)
+                    mx_troops = max_troops(players[player_turn], territories, continents, NUM_PLAYERS)
+
+                    print(mx_troops)
+
+                    if territory.owner == players[player_turn] and mx_troops > 0 and not phase:
                         territory.troops += 1
-                        players[player_turn].troops -= 1
+                        mx_troops -= 1
 
                         #redraw that tile
                         pygame.draw.rect(screen, territory.color, (cell_x * CELL_SIZE + 1, cell_y * CELL_SIZE + 1, CELL_SIZE -2, CELL_SIZE-2))
