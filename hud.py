@@ -1,10 +1,19 @@
 import pygame
 import random
+import os
+import copy
 
 # Define colors
 HUD_WIDTH = 250
 HUD_HEIGHT = 600
 HUD_BG_COLOR = (200, 200, 200)
+
+class Sound:
+  def __init__(self,path):
+    self.path = path
+    self.sound = pygame.mixer.Sound(path)
+  def play(self):
+    pygame.mixer.Sound.play(self.sound)
 
 def attack(screen, attacker, defender):
     # Ensure attacker has at least 2 troops (1 for attacking and 1 for defense)
@@ -69,11 +78,13 @@ def attack(screen, attacker, defender):
 
     # Check if defender lost all troops
     if defender.troops <= 0:
+        sound = Sound(os.path.join('yay-6326.mp3'))
+        sound.play()
         defender.troops = max(1, attacker.troops - 1)
         defender.owner = attacker.owner
         attacker.troops = 1
-        attacker.owner.gained += 1
-        defender.owner.gained -= 1
+        #attacker.owner.gained += 1
+        #defender.owner.gained -= 1
         text_surface = font.render(f"{attacker.owner.name} conquered", True, (0, 0, 0))
         text_rect = text_surface.get_rect(center=(925, 250))
         screen.blit(text_surface, text_rect)
@@ -81,6 +92,8 @@ def attack(screen, attacker, defender):
         text_rect = text_surface.get_rect(center=(925, 265))
         screen.blit(text_surface, text_rect)
     else:
+        sound = Sound(os.path.join('womp-womp.mp3'))
+        sound.play()
         text_surface = font.render(f"Defender successfully defended", True, (0, 0, 0))
         text_rect = text_surface.get_rect(center=(925, 250))
         screen.blit(text_surface, text_rect)
