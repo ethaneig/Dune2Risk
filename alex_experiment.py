@@ -148,11 +148,9 @@ def attack(attacker: Territory, defender: Territory):
 
     # Check if defender lost all troops
     if defender.troops <= 0:
-        # Attacker conquers the territory
-        
-        #Update Defender
         defender.troops = max(1, attacker.troops - 1)
         defender.owner = attacker.owner
+        attacker.troops = 1
 
         print(f"{attacker.owner} conquered {defender.location}!")
     else:
@@ -246,14 +244,12 @@ def main():
                     elif phase and selected_attacker is not None:
                         attack(selected_attacker, territory)
 
-                        selected_attacker.troops = 1
-
                         pygame.draw.rect(screen, selected_attacker.color, (attackx * CELL_SIZE + 1, attacky * CELL_SIZE + 1, CELL_SIZE -2, CELL_SIZE-2))
                         font = pygame.font.Font(None, 24)
                         text_surface = font.render(str(selected_attacker.troops), True, selected_attacker.owner.color)
                         text_rect = text_surface.get_rect(center=(attackx * CELL_SIZE + CELL_SIZE // 2, attacky * CELL_SIZE + CELL_SIZE // 2))
                         screen.blit(text_surface, text_rect)
-                        
+
                         pygame.draw.rect(screen, territory.color, (cell_x * CELL_SIZE + 1, cell_y * CELL_SIZE + 1, CELL_SIZE -2, CELL_SIZE-2))
                         font = pygame.font.Font(None, 24)
                         text_surface = font.render(str(territory.troops), True, territory.owner.color)
@@ -261,7 +257,7 @@ def main():
                         screen.blit(text_surface, text_rect)
 
                         selected_attacker = None
-                        
+
 
         pygame.display.flip()
 
