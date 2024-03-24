@@ -112,10 +112,7 @@ def max_troops(player: Player, territories, continents, num_players):
     # 1 additional troop for every 3 territories above start
     mx_trps = 3
 
-    mx_trps += max(0, (len(player.territories) - len(territories) // num_players) // 3)
-
-    print((len(player.territories) - len(territories) // num_players) // 3)
-    print(len(player.territories))
+    mx_trps += max(0, player.gained)
 
     # Continent troop bonus
     for continent in continents:
@@ -201,8 +198,6 @@ def main():
                     cell_x = x // CELL_SIZE
                     cell_y = y // CELL_SIZE
                     territory = territories[cell_y][cell_x]
-
-                    print(mx_troops)
 
                     if territory.owner == players[player_turn] and mx_troops > 0 and not phase:
                         territory.troops += 1
