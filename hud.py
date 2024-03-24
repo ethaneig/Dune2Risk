@@ -1,5 +1,4 @@
 import pygame
-from alex_experiment import HUD_WIDTH, HUD_BG_COLOR, HUD_HEIGHT
 
 # Define colors
 HUD_WIDTH = 250
