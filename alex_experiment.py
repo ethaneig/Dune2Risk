@@ -142,7 +142,7 @@ def main():
                 territories[y][x] = Territory(continent=designation, troops=troops, location = (y,x))
 
     def generate_continent():
-        for continent in range(num_continents):
+        for continent in range(num_countries):
             Continent(continent_names[continent], territories)
         pass
 
