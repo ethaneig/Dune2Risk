@@ -140,7 +140,7 @@ def main():
     pygame.display.set_caption("Risk Game")
     global playercolors
     players = [Player(f"Player {i+1}", (playercolors[i])) for i in range(NUM_PLAYERS)]
-    path = ["atreides", "harkonnen", "corrino", "zendaya"]
+    path = ["House of Atreides'", "House of Harkonnen's", "House of Corrino's", "Fremen's"]
     img = [0, 0, 0, 0]
     for i in range(4):
         texture=os.path.join(f'{path[i]}.png')
