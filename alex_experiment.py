@@ -105,6 +105,7 @@ def draw_grid(screen):
             pygame.draw.rect(screen, WHITE, rect, 1)
 
 def max_troops(player: Player, territories, continents, num_players):
+
     mx_trps = player.troops
 
     # 1 additional troop for every 3 territories above start
