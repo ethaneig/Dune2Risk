@@ -329,13 +329,13 @@ def main():
                         attack(screen, selected_attacker, territory)
 
                         pygame.draw.rect(screen, selected_attacker.color, (attackx * CELL_SIZE + 1, attacky * CELL_SIZE + 1, CELL_SIZE -2, CELL_SIZE-2))
-                        font = pygame.font.Font(None, 24)
+                        font = pygame.font.Font("Dune_Rise.ttf", 12)
                         text_surface = font.render(str(selected_attacker.troops), True, selected_attacker.owner.color)
                         text_rect = text_surface.get_rect(center=(attackx * CELL_SIZE + CELL_SIZE // 2, attacky * CELL_SIZE + CELL_SIZE // 2))
                         screen.blit(text_surface, text_rect)
 
                         pygame.draw.rect(screen, territory.color, (cell_x * CELL_SIZE + 1, cell_y * CELL_SIZE + 1, CELL_SIZE -2, CELL_SIZE-2))
-                        font = pygame.font.Font(None, 24)
+                        font = pygame.font.Font("Dune_Rise.ttf", 12)
                         text_surface = font.render(str(territory.troops), True, territory.owner.color)
                         text_rect = text_surface.get_rect(center=(cell_x * CELL_SIZE + CELL_SIZE // 2, cell_y * CELL_SIZE + CELL_SIZE // 2))
                         screen.blit(text_surface, text_rect)
