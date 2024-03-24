@@ -8,6 +8,7 @@ HUD_WIDTH = 250
 HUD_HEIGHT = 600
 HUD_BG_COLOR = (255, 255, 255)
 playercolors = [(255, 0, 0), (0,0,0), (255,105,180), (0, 0, 255)]
+path = ["House of Atreides'", "House of Harkonnen's", "House of Corrino's", "Fremen's"]
 class Sound:
   def __init__(self,path):
     self.path = path
@@ -111,7 +112,7 @@ def draw_hud(screen, phase, player_turn, img):
     # Add text to the HUD (for demonstration purposes)
     font = pygame.font.Font(None, 24)
     color = playercolors[player_turn]
-    text_surface = font.render(f"Player {player_turn + 1}'s turn", True, color)
+    text_surface = font.render(f"{path[player_turn]} turn", True, color)
     text_rect = text_surface.get_rect(center=(HUD_WIDTH // 2, 50))
     hud_surface.blit(text_surface, text_rect)
     if phase == 0:
