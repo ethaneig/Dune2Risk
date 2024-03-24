@@ -36,7 +36,7 @@ class Player:
         self.color = color
         self.troops = 0
         self.territories = []
-    
+
     def update_territories():
         self.territories = [territory for territory in territory if territory.owner == self]
 
@@ -44,18 +44,6 @@ class Continent:
     def __init__(self, name):
         self.name = name
         self.territories = [territory for territory in territory if territory.continent == self]
-
-    def max_troops(self, territories, continents):
-        max_troops = self.troops
-
-        # One troop for every 3 territories above max territories
-        max_troops += (len(territories) / 2) // 3
-
-        for continent, owner in continents.items():
-            if owner == self:
-                max_troops += len(territories[continent]) // 2
-
-        return max_troops
 
 class Territory:
     def __init__(self, continent=0, troops=1, owner=None, location=None):
@@ -85,7 +73,7 @@ def generate_grid(rows, cols):
                     grid[new_row][new_col] = (label, 0, None)  # Set continent with 0 troops and no owner
                     generate_country(new_row, new_col, label)
 
-    global num_countries  # Random number of countries between 3 and 6
+    global num_countries
     country_labels = [i for i in range(1, num_countries + 1)]
 
     for label in country_labels:
@@ -105,6 +93,19 @@ def draw_grid(screen):
             rect = pygame.Rect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
             pygame.draw.rect(screen, WHITE, rect, 1)
 
+def max_troops(player: Player, territories, continents, num_players):
+    mx_trps = player.troops
+
+    # 1 additional troop for every 3 territories above start
+    mx_trps += (player.territories - len(territories) // num_players) // 3
+
+    # Continent troop bonus
+    for continent in continents:
+        if player == continent.owner:
+            mx_trps += continent.score
+
+    return mx_trps
+
 def draw_hud(screen, phase, player_turn):
     # Create a surface for HUD
     hud_surface = pygame.Surface((HUD_WIDTH, HUD_HEIGHT))
@@ -118,7 +119,7 @@ def draw_hud(screen, phase, player_turn):
         text_surface = font.render("Place Troops", True, (0, 0, 0))
     else:
         if selected_attacker is None:
-            text_surface = font.render("Choose Territory to Attack With", True, (0, 0, 0))    
+            text_surface = font.render("Choose Territory to Attack With", True, (0, 0, 0))
         else:
             text_surface = font.render("Choose Territory to Attack", True, (0, 0, 0))
     text_rect = text_surface.get_rect(center=(HUD_WIDTH // 2, 100))
@@ -190,14 +191,16 @@ def main():
     players = [Player(f"Player {i+1}", (playercolors[i])) for i in range(NUM_PLAYERS)]
 
     territories = [[Territory() for _ in range(NUM_COLS)] for _ in range(NUM_ROWS)]
-    # Assign territories to players (randomly for demonstration)
+
+    # assign territories to players (randomly for demonstration)
     grid = generate_grid(NUM_ROWS, NUM_COLS)
 
+    # generate territories
     for y in range(NUM_ROWS):
         for x in range(NUM_COLS):
             designation, troops, _ = grid[y][x]
             if designation:
-                territories[y][x] = Territory(continent=designation, troops=1, owner=random.choice(players), location = (y,x))
+                territories[y][x] = Territory(continent=designation, troops=random.choice(1:3), owner=random.choice(players), location = (y,x))
             else:
                 territories[y][x] = Territory(continent=designation, troops=troops, location = (y,x))
 
@@ -266,7 +269,7 @@ def main():
                         attacky = cell_y
                         continue
                     elif phase and selected_attacker is not None:
-                        attack(selected_attacker, territory)
+                        attack(screen, selected_attacker, territory)
 
                         pygame.draw.rect(screen, selected_attacker.color, (attackx * CELL_SIZE + 1, attacky * CELL_SIZE + 1, CELL_SIZE -2, CELL_SIZE-2))
                         font = pygame.font.Font(None, 24)
