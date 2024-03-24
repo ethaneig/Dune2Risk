@@ -1,6 +1,7 @@
 import pygame
 import random
 from enum import Enum
+from hud import *
 
 # Define colors
 WHITE = (255, 255, 255)
@@ -9,27 +10,28 @@ HUD_WIDTH = 250
 HUD_HEIGHT = 600
 HUD_BG_COLOR = (200, 200, 200)
 
-playercolors = [(0,0,0), (150, 75, 0), (255, 0, 0)]
-continent_names = ["North America", "South America", "Europe", "Africa", "Australia", "Asia"]
+playercolors = [(255, 0, 0), (0,0,0), (255,105,180), (0, 0, 255)]
 
+continent_names = ["North America", "South America", "Europe", "Africa", "Australia", "Asia"]
 continentcolors =  [
-    (0, 0, 255),        #blue water
-    (255,105,180),      # North America (pink)
-    (255, 165, 0),      # South America (Orange)
-    (255, 255, 0),      # Europe (Yellow)
-    (0, 128, 0),        # Africa (Green)
-    (128, 0, 128),      # Australia (Purple)
-    (0, 255, 255)       # Asia (aqua)
+    (194, 178, 128), #sand sand
+    (150, 75, 0),      # North America (brown)
+    (255, 165, 0),    # South America (Orange)
+    (255, 255, 0),    # Europe (Yellow)
+    (0, 128, 0),      # Africa (Green)
+    (128, 0, 128),     # Australia (Purple)
+    (0, 255, 255)  #asian(aqua)
 ]
 
 # Define constants
-num_continents = 6
+num_countries = 6
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
-CELL_SIZE = 40
+CELL_SIZE = 20
+NUM_CONTINENTS = 6
 NUM_ROWS = SCREEN_HEIGHT // CELL_SIZE
 NUM_COLS = SCREEN_WIDTH // CELL_SIZE
-NUM_PLAYERS = 2
+NUM_PLAYERS = 4
 
 class Player:
     def __init__(self, name, color):
@@ -37,19 +39,23 @@ class Player:
         self.color = color
         self.troops = 0
         self.territories = []
+        self.gained = 0
 
 class Continent:
     def __init__(self, name, territories):
         self.name = name
-        self.territories = [territory for territory in territories if territory.continent == self]
-        self.owned = 0
+        self.territories = territories
+        self.owner = -1
         self.score = len(self.territories) // 2
 
-    def is_owned(player):
+    def add_territory(self, territory):
+        self.territories.append(territory)
+
+    def is_owned(self, player):
         for territory in self.territories:
             if territory.owner != player:
                 return False
-        self.owned = players.index(player)
+        self.owner = player
         return True
 
 class Territory:
@@ -60,7 +66,16 @@ class Territory:
         self.color = continentcolors[continent]
         self.location = location
 
-def generate_grid(rows, cols):
+    def is_adjacent(self, other):
+        sx, sy = self.location
+        ox, oy = other.location
+        if sx == ox and (sy == oy + 1 or sy == oy - 1):
+            return True
+        if sy == oy and (sx == ox + 1 or sx == ox - 1):
+            return True
+        return False
+
+def generate_grid(rows, cols, NUM_CONTINENTS):
     grid = [[(0, 0, None) for _ in range(cols)] for _ in range(rows)]  # Initialize grid with water ('w')
 
     def sum_territory(grid, country_label):
@@ -76,12 +91,11 @@ def generate_grid(rows, cols):
             new_row, new_col = row + dr, col + dc
             if 0 <= new_row < rows and 0 <= new_col < cols:
                 cell = grid[new_row][new_col]
-                if cell[0] == 0 and sum_territory(grid, label) < random.randint(10, 20):
+                if cell[0] == 0 and sum_territory(grid, label) < random.randint(20, 30):
                     grid[new_row][new_col] = (label, 0, None)  # Set continent with 0 troops and no owner
                     generate_country(new_row, new_col, label)
 
-    global num_continents  # Random number of countries between 3 and 6
-    country_labels = [i for i in range(1, num_continents + 1)]
+    country_labels = [i for i in range(1, NUM_CONTINENTS + 1)]
 
     for label in country_labels:
         start_row = random.randint(0, rows - 1)
@@ -100,82 +114,22 @@ def draw_grid(screen):
             rect = pygame.Rect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
             pygame.draw.rect(screen, WHITE, rect, 1)
 
-def draw_hud(screen, phase, player_turn):
-    # Create a surface for HUD
-    hud_surface = pygame.Surface((HUD_WIDTH, HUD_HEIGHT))
-    hud_surface.fill(HUD_BG_COLOR)
-    # Add text to the HUD (for demonstration purposes)
-    font = pygame.font.Font(None, 24)
-    text_surface = font.render(f"Player {player_turn + 1}'s turn", True, (0, 0, 0))
-    text_rect = text_surface.get_rect(center=(HUD_WIDTH // 2, 50))
-    hud_surface.blit(text_surface, text_rect)
-    if phase == 0:
-        text_surface = font.render("Place Troops", True, (0, 0, 0))
-    else:
-        if selected_attacker is None:
-            text_surface = font.render("Choose Territory to Attack With", True, (0, 0, 0))
-        else:
-            text_surface = font.render("Choose Territory to Attack", True, (0, 0, 0))
-    text_rect = text_surface.get_rect(center=(HUD_WIDTH // 2, 100))
-    hud_surface.blit(text_surface, text_rect)
+def max_troops(player: Player, territories, num_players):
+    # refresh continents
+    continents = [Continent(name=designation, territories=[territory for row in territories for territory in row if territory.continent == designation]) for designation in range(1, NUM_CONTINENTS + 1)]
 
-    pygame.draw.rect(hud_surface, (255, 0, 0), (50, 300, 150, 50))
-    text_surface = font.render("End Action", True, (0, 0, 0))
-    text_rect = text_surface.get_rect(center=(HUD_WIDTH // 2, 325))
-    hud_surface.blit(text_surface, text_rect)
-    # Blit the HUD onto the screen
-    screen.blit(hud_surface, (screen.get_width() - HUD_WIDTH, 0))
+    # 1 additional troop for every 3 territories above start
+    mx_trps = 3
 
-def attack(attacker: Territory, defender: Territory):
-    # Ensure attacker has at least 2 troops (1 for attacking and 1 for defense)
-    player = attacker.owner
-    if attacker.troops < 2:
-        print("Attacker doesn't have enough troops to attack.")
-        return
+    mx_trps += max(0, player.gained)
 
-    if attacker.location[0] != defender.location[0] + 1 and attacker.location[0] != defender.location[0] - 1 and attacker.location[1] != defender.location[1] + 1 and attacker.location[1] != defender.location[1] - 1:
-        print("Attack is not against a valid location.")
-        return
+    # Continent troop bonus
+    for continent in continents:
+        if continent.is_owned(player):
+            print("here")
+            mx_trps += continent.score
 
-    if defender.owner == player or defender.continent == 0:
-        print("Attack is not against a valid player.")
-        return
-
-    if attacker.owner != player:
-        print("Player does not control this territory.")
-        return
-
-    # Simulate dice rolls for attacker and defender
-    attacker_dice_roll = [random.randint(1, 6) for _ in range(min(attacker.troops - 1, 3))]  # Up to 3 dice for attacker
-    defender_dice_roll = [random.randint(1, 6) for _ in range(min(defender.troops, 2))]  # Up to 2 dice for defender
-
-    # Sort dice rolls in descending order
-    attacker_dice_roll.sort(reverse=True)
-    defender_dice_roll.sort(reverse=True)
-
-    # Determine number of battles based on the number of dice rolled by attacker and defender
-    num_battles = min(len(attacker_dice_roll), len(defender_dice_roll))
-
-    # Compare dice rolls for each battle
-    for i in range(num_battles):
-        if attacker_dice_roll[i] > defender_dice_roll[i]:
-            # Attacker wins the battle, defender loses 1 troop
-            defender.troops -= 1
-        else:
-            # Defender wins the battle, attacker loses 1 troop
-            attacker.troops -= 1
-
-    # Check if defender lost all troops
-    if defender.troops <= 0:
-        # Attacker conquers the territory
-
-        #Update Defender
-        defender.troops = max(1, attacker.troops - 1)
-        defender.owner = attacker.owner
-
-        print(f"{attacker.owner} conquered {defender.location}!")
-    else:
-        print("Defender successfully defended the territory.")
+    return mx_trps
 
 def main():
     pygame.init()
@@ -187,23 +141,23 @@ def main():
     players = [Player(f"Player {i+1}", (playercolors[i])) for i in range(NUM_PLAYERS)]
 
     territories = [[Territory() for _ in range(NUM_COLS)] for _ in range(NUM_ROWS)]
-    # Assign territories to players (randomly for demonstration)
-    grid = generate_grid(NUM_ROWS, NUM_COLS)
+
+    # assign territories to players (randomly for demonstration)
+    grid = generate_grid(NUM_ROWS, NUM_COLS, NUM_CONTINENTS)
+
+    # generate territories
+    continents = []
+
+    for name in range(1,NUM_CONTINENTS + 1):
+        continents.append(Continent(name, []))
 
     for y in range(NUM_ROWS):
         for x in range(NUM_COLS):
             designation, troops, _ = grid[y][x]
             if designation:
-                territories[y][x] = Territory(continent=designation, troops=1, owner=random.choice(players), location = (y,x))
+                territories[y][x] = Territory(continent=designation, troops=random.randint(1,3), owner=random.choice(players), location = (y,x))
             else:
                 territories[y][x] = Territory(continent=designation, troops=troops, location = (y,x))
-
-    def generate_continent():
-        for continent in range(num_continents):
-            Continent(continent_names[continent], territories)
-        pass
-
-    generate_continent()
 
     running = True
 
@@ -226,6 +180,13 @@ def main():
     player_turn = 0
     phase = 0
     selected_attacker = None
+    mx_troops = max_troops(players[player_turn], territories, NUM_PLAYERS)
+    font = pygame.font.Font(None, 19)
+    pygame.draw.rect(screen, (200, 200, 200), (800, 225, 250, 60))
+    text_surface = font.render(f"Troops left to place: {mx_troops}", True, (0, 0, 0))
+    text_rect = text_surface.get_rect(center=(925, 250))
+    screen.blit(text_surface, text_rect)
+
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -240,22 +201,31 @@ def main():
                                 if(player_turn == NUM_PLAYERS):
                                     player_turn = 0
                                 phase = 0
+                                mx_troops = max_troops(players[player_turn], territories, NUM_PLAYERS)
                             else:
                                 phase = 1
                             draw_hud(screen, phase, player_turn)
+                            if phase == 0:
+                                font = pygame.font.Font(None, 19)
+                                pygame.draw.rect(screen, (200, 200, 200), (800, 225, 250, 60))
+                                text_surface = font.render(f"Troops left to place: {mx_troops}", True, (0, 0, 0))
+                                text_rect = text_surface.get_rect(center=(925, 250))
+                                screen.blit(text_surface, text_rect)
                         continue
-                        #do hud stuff(end attack, end placing troops)
 
                     #otherwise add troops
                     cell_x = x // CELL_SIZE
                     cell_y = y // CELL_SIZE
                     territory = territories[cell_y][cell_x]
 
-                    #if it's the right player
-                    if territory.owner == players[player_turn] and not phase:  # Only allow player 1 to add troops (for demonstration)
+                    if territory.owner == players[player_turn] and mx_troops > 0 and not phase:
                         territory.troops += 1
-                        players[player_turn].troops -= 1
-
+                        mx_troops -= 1
+                        font = pygame.font.Font(None, 19)
+                        pygame.draw.rect(screen, (200, 200, 200), (800, 225, 250, 60))
+                        text_surface = font.render(f"Troops left to place: {mx_troops}", True, (0, 0, 0))
+                        text_rect = text_surface.get_rect(center=(925, 250))
+                        screen.blit(text_surface, text_rect)
                         #redraw that tile
                         pygame.draw.rect(screen, territory.color, (cell_x * CELL_SIZE + 1, cell_y * CELL_SIZE + 1, CELL_SIZE -2, CELL_SIZE-2))
 
@@ -264,13 +234,12 @@ def main():
                         text_rect = text_surface.get_rect(center=(cell_x * CELL_SIZE + CELL_SIZE // 2, cell_y * CELL_SIZE + CELL_SIZE // 2))
                         screen.blit(text_surface, text_rect)
                     elif phase and territory.owner == players[player_turn]:
-                        print("Choose Territory to Attack")
                         selected_attacker = territory
                         attackx = cell_x
                         attacky = cell_y
                         continue
                     elif phase and selected_attacker is not None:
-                        attack(selected_attacker, territory)
+                        attack(screen, selected_attacker, territory)
 
                         pygame.draw.rect(screen, selected_attacker.color, (attackx * CELL_SIZE + 1, attacky * CELL_SIZE + 1, CELL_SIZE -2, CELL_SIZE-2))
                         font = pygame.font.Font(None, 24)
@@ -285,6 +254,8 @@ def main():
                         screen.blit(text_surface, text_rect)
 
                         selected_attacker = None
+                    elif phase and territory.owner is None and selected_attacker is not None and selected_attacker.is_adjacent(territory):
+                        paul_muadib_atreides_snake_game(selected_attacker, territory)
 
 
         pygame.display.flip()
