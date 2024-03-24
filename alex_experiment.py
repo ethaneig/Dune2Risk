@@ -201,7 +201,7 @@ def main():
                 if event.button == 1:  # Left mouse button
                     x, y = event.pos
                     if(x > SCREEN_WIDTH):
-                        if(x > 850 and x < 950 and y > 300 and y < 350):
+                        if(x > 850 and x < 1000 and y > 300 and y < 350):
                             if phase == 1:
                                 player_turn += 1
                                 if(player_turn == NUM_PLAYERS):
