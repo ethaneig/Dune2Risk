@@ -20,7 +20,7 @@ def attack(screen, attacker, defender, snakemode = False):
     # Ensure attacker has at least 2 troops (1 for attacking and 1 for defense)
     player = attacker.owner
     font = pygame.font.Font("Dune_Rise.ttf", 10)
-    pygame.draw.rect(screen, (200, 200, 200), (800, 225, 250, 60))
+    pygame.draw.rect(screen, (255, 255, 255), (800, 225, 250, 60))
     if attacker.troops < 2:
         text_surface = font.render(f"Attacker doesn't have enough", True, (0, 0, 0))
         text_rect = text_surface.get_rect(center=(925, 250))

@@ -286,6 +286,18 @@ def main():
                             text_surface = font.render(str(selected_attacker.troops), True, selected_attacker.owner.color)
                             text_rect = text_surface.get_rect(center=(attackx * CELL_SIZE + CELL_SIZE // 2, attacky * CELL_SIZE + CELL_SIZE // 2))
                             screen.blit(text_surface, text_rect)
+                            for y, row in enumerate(territories):
+                                for x, territory in enumerate(row):
+                                    if not territory.continent:
+                                        pygame.draw.rect(screen, territory.color, (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
+                                        continue
+                                    pygame.draw.rect(screen, (0,0,0),(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
+                                    pygame.draw.rect(screen, territory.color, (x * CELL_SIZE + 1, y * CELL_SIZE + 1, CELL_SIZE -2, CELL_SIZE-2))
+                                    if territory.troops > 0:
+                                        font = pygame.font.Font(None, 24)
+                                        text_surface = font.render(str(territory.troops), True, territory.owner.color)
+                                        text_rect = text_surface.get_rect(center=(x * CELL_SIZE + CELL_SIZE // 2, y * CELL_SIZE + CELL_SIZE // 2))
+                                        screen.blit(text_surface, text_rect)
                             continue
 
                         cell_y, cell_x = cells
