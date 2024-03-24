@@ -67,7 +67,7 @@ class Territory:
         self.location = location
 
 def generate_grid(rows, cols, NUM_CONTINENTS):
-    grid = [[(0, 0, None) for _ in range(cols)] for _ in range(rows)]  # Initialize grid with water ('w')
+    grid = [[(0, 0, (0,0,0)) for _ in range(cols)] for _ in range(rows)]  # Initialize grid with water ('w')
 
     def sum_territory(grid, country_label):
         territory_count = 0
