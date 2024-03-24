@@ -237,7 +237,7 @@ def main():
                             new_territory.troops += selected_attacker.troops - 1
                             selected_attacker.troops = 1
                         else:
-                            while(selected_attacker.troops > 1 or new_territory.troops > 0)
+                            while(selected_attacker.troops > 1 and new_territory.troops > 0):
                                 attack(screen, selected_attacker, new_territory)
                             selected_attacker.troops = 1
 

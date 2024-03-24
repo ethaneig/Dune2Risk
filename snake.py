@@ -91,14 +91,14 @@ def snaker(screen, territories, startx, starty, color):
 
 		snake_body.insert(0, list(snake_position))
 
-		if fruit_position[0] >= 800:
+		if fruit_position[0] >= 799:
 			fruit_position[0] = 0
 		elif fruit_position[0] <= 0:
-			fruit_position[0] = 800
-		if fruit_position[1] >= 600:
+			fruit_position[0] = 790
+		if fruit_position[1] >= 599:
 			fruit_position[1] = 0
 		elif fruit_position[1] <= 0:
-			fruit_position[1] = 600
+			fruit_position[1] = 599
 
 		cell_x = fruit_position[0] // CELL_SIZE
 		cell_y = fruit_position[1] // CELL_SIZE
