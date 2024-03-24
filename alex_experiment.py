@@ -275,6 +275,9 @@ def main():
 
                         if cells == 0:
                             selected_attacker.troops = 1
+                            text_surface = font.render(f"Shai Hulud killed your troops", True, (0, 0, 0))
+                            text_rect = text_surface.get_rect(center=(925, 250))
+                            screen.blit(text_surface, text_rect)
 
                             pygame.draw.rect(screen, selected_attacker.color, (attackx * CELL_SIZE + 1, attacky * CELL_SIZE + 1, CELL_SIZE -2, CELL_SIZE-2))
                             font = pygame.font.Font(None, 24)
