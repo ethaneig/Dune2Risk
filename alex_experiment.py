@@ -226,10 +226,9 @@ def main():
                     territory = territories[cell_y][cell_x]
 
                     if phase and territory.owner is None and selected_attacker is not None and selected_attacker.is_adjacent(territory):
-                        print("hello")
                         sound = Sound(os.path.join('Dune scream song meme.mp3'))
                         sound.play()
-                        #paul_muadib_atreides_snake_game(screen, territories, x, y)
+                        paul_muadib_atreides_snake_game(screen, territories, x, y)
                         continue
                     elif territory.owner is None:
                         continue
