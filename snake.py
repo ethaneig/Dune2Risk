@@ -1,9 +1,10 @@
 import pygame
 
 CELL_SIZE = 20
-WHITE = (150,75,25)
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
 
-def snaker(screen, territories, startx, starty, color):
+def snaker(screen, territories, startx, starty):
 	snake_speed = 15
 	dead = False
 
@@ -87,41 +88,40 @@ def snaker(screen, territories, startx, starty, color):
 			snakedir = "LEFT"
 			snake_position[0] -= 7
 
+		# if snakedir == 'UP':
+		# 	snake_position[1] += 10
+		# if snakedir == 'DOWN':
+		# 	snake_position[1] -= 10
+		# if snakedir == 'LEFT':
+		# 	snake_position[0] -= 10
+		# if snakedir == 'RIGHT':
+		# 	snake_position[0] += 10
+
 		snake_body.pop()
 
 		snake_body.insert(0, list(snake_position))
 
-		if fruit_position[0] >= 800:
-			fruit_position[0] = 0
-		elif fruit_position[0] <= 0:
-			fruit_position[0] = 800
-		if fruit_position[1] >= 600:
-			fruit_position[1] = 0
-		elif fruit_position[1] <= 0:
-			fruit_position[1] = 600
-
 		cell_x = fruit_position[0] // CELL_SIZE
 		cell_y = fruit_position[1] // CELL_SIZE
 
-
 		if territories[cell_y][cell_x].continent != 0:
-			return territories[cell_y][cell_x]
+			break
 
-
+		
 		for y, row in enumerate(territories):
 			for x, territory in enumerate(row):
 				if not territory.continent:
 					pygame.draw.rect(screen, territory.color, (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
 					continue
-
-
+		
+		
 		for pos in snake_body:
 			cell_x = pos[0] // CELL_SIZE
 			cell_y = pos[1] // CELL_SIZE
 			if territories[cell_y][cell_x].continent == 0:
 				pygame.draw.rect(screen, WHITE, pygame.Rect(pos[0], pos[1], 10, 10))
 
-		pygame.draw.rect(screen, color, pygame.Rect(fruit_position[0], fruit_position[1], 10, 10))
+		pygame.draw.rect(screen, BLACK, pygame.Rect(fruit_position[0], fruit_position[1], 10, 10))
 
 		for block in snake_body[1:]:
 			if fruit_position[0] == block[0] and fruit_position[1] == block[1]:
@@ -129,7 +129,7 @@ def snaker(screen, territories, startx, starty, color):
 				break
 
 		if dead:
-			return 0
+			break
 
 		# Refresh game screen
 		pygame.display.update()
