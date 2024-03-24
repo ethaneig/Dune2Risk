@@ -171,7 +171,7 @@ def main():
     player_turn = 0
     phase = 0
     selected_attacker = None
-    mx_troops = max_troops(players[player_turn], territories, continents, NUM_PLAYERS)
+    mx_troops = max_troops(players[player_turn], territories, NUM_PLAYERS)
     font = pygame.font.Font(None, 19)
     pygame.draw.rect(screen, (200, 200, 200), (800, 225, 250, 60))
     text_surface = font.render(f"Troops left to place: {mx_troops}", True, (0, 0, 0))
