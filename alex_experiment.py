@@ -229,9 +229,9 @@ def main():
                         print("hello")
                         sound = Sound(os.path.join('Dune scream song meme.mp3'))
                         sound.play()
-                        ty, tx = paul_muadib_atreides_snake_game(screen, territories, x, y)
+                        destination = paul_muadib_atreides_snake_game(screen, territories, x, y, players[player_turn].color)
 
-                        territory.troops = selected_attacker.troops - 1
+                        destination.troops = selected_attacker.troops - 1
                         selected_attacker.troops = 1
 
                         pygame.draw.rect(screen, selected_attacker.color, (attackx * CELL_SIZE + 1, attacky * CELL_SIZE + 1, CELL_SIZE -2, CELL_SIZE-2))
