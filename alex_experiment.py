@@ -118,11 +118,11 @@ def attack(attacker: Territory, defender: Territory):
         print("Attack is not against a valid location.")
         return
 
-    if defender.owner == player.name or defender.owner == None:
+    if defender.owner == player or defender.continent == 0:
         print("Attack is not against a valid player.")
         return
 
-    if attacker.owner != player.name:
+    if attacker.owner != player:
         print("Player does not control this territory.")
         return
 
@@ -151,7 +151,7 @@ def attack(attacker: Territory, defender: Territory):
         # Attacker conquers the territory
         defender.troops = max(1, attacker.troops - 1)  # Leave at least 1 troop in the conquered territory
         defender.owner = attacker.owner
-        print(f"{attacker.owner} conquered {defender.continent}!")
+        print(f"{attacker.owner} conquered {defender.location}!")
     else:
         print("Defender successfully defended the territory.")
 
@@ -197,6 +197,7 @@ def main():
     #game loop
     player_turn = 0
     phase = 0
+    selected_attacker = None
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -235,9 +236,12 @@ def main():
                         text_rect = text_surface.get_rect(center=(cell_x * CELL_SIZE + CELL_SIZE // 2, cell_y * CELL_SIZE + CELL_SIZE // 2))
                         screen.blit(text_surface, text_rect)
                     elif phase and territory.owner == players[player_turn]:
-                        attack(territory, territories[cell_y][cell_x + 1])
-
-
+                        print("Choose Territory to Attack")
+                        selected_attacker = territory
+                        continue
+                    elif phase and selected_attacker is not None:
+                        attack(selected_attacker, territory)
+                        selected_attacker = None
 
         pygame.display.flip()
 
