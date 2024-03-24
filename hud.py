@@ -79,7 +79,7 @@ def attack(screen, attacker, defender):
 
     # Check if defender lost all troops
     if defender.troops <= 0:
-        sound = Sound(os.path.join('yay-6326.mp3'))
+        sound = Sound(os.path.join('lisanalgaib2.mp3'))
         sound.play()
         attacker.owner.gained += 1
         defender.owner.gained += -1
