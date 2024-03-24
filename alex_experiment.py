@@ -35,6 +35,15 @@ class Player:
         self.name = name
         self.color = color
         self.troops = 0
+        self.territories = []
+    
+    def update_territories():
+        self.territories = [territory for territory in territory if territory.owner == self]
+
+class Continent:
+    def __init__(self, name):
+        self.name = name
+        self.territories = [territory for territory in territory if territory.continent == self]
 
 class Territory:
     def __init__(self, continent=0, troops=1, owner=None, location=None):
@@ -96,7 +105,10 @@ def draw_hud(screen, phase, player_turn):
     if phase == 0:
         text_surface = font.render("Place Troops", True, (0, 0, 0))
     else:
-        text_surface = font.render("Choose Countries to Attack", True, (0, 0, 0))
+        if selected_attacker is None:
+            text_surface = font.render("Choose Territory to Attack With", True, (0, 0, 0))    
+        else:
+            text_surface = font.render("Choose Territory to Attack", True, (0, 0, 0))
     text_rect = text_surface.get_rect(center=(HUD_WIDTH // 2, 100))
     hud_surface.blit(text_surface, text_rect)
 
@@ -245,8 +257,6 @@ def main():
                         continue
                     elif phase and selected_attacker is not None:
                         attack(selected_attacker, territory)
-
-                        selected_attacker.troops = 1
 
                         pygame.draw.rect(screen, selected_attacker.color, (attackx * CELL_SIZE + 1, attacky * CELL_SIZE + 1, CELL_SIZE -2, CELL_SIZE-2))
                         font = pygame.font.Font(None, 24)
