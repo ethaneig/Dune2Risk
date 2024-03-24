@@ -10,7 +10,7 @@ HUD_WIDTH = 250
 HUD_HEIGHT = 600
 HUD_BG_COLOR = (200, 200, 200)
 
-playercolors = [(0,0,0), (255,105,180), (255, 0, 0), (0, 0, 255)]
+playercolors = [(255, 0, 0), (0,0,0), (255,105,180), (0, 0, 255)]
 
 continent_names = ["North America", "South America", "Europe", "Africa", "Australia", "Asia"]
 continentcolors =  [
