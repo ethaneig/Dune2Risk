@@ -124,7 +124,7 @@ def draw_hud(screen, phase, player_turn, img):
 
     font = pygame.font.Font("Dune_Rise.ttf", 15)
     pygame.draw.rect(hud_surface, (255, 0, 0), (50, 300, 150, 50))
-    text_surface = font.render("End Action", True, (0,0,0))
+    text_surface = font.render("end action", True, (0,0,0))
     text_rect = text_surface.get_rect(center=(HUD_WIDTH // 2, 325))
     hud_surface.blit(text_surface, text_rect)
     # Blit the HUD onto the screen
