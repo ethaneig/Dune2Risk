@@ -34,7 +34,7 @@ def snaker(screen, territories, startx, starty):
 
 	# Main Function
 	while True:
-		
+
 		# handling key events
 		for event in pygame.event.get():
 			if event.type == pygame.KEYDOWN:
@@ -48,7 +48,7 @@ def snaker(screen, territories, startx, starty):
 					change_to = 'RIGHT'
 
 		# If two keys pressed simultaneously
-		# we don't want snake to move into two 
+		# we don't want snake to move into two
 		# directions simultaneously
 		if change_to == 'UP' and direction != 'DOWN':
 			direction = 'UP'
@@ -94,9 +94,9 @@ def snaker(screen, territories, startx, starty):
 		# will be incremented by 10
 		snake_body.insert(0, list(snake_position))
 
-		cell_x = fruit_position * CELL_SIZE
-		cell_y = fruit_position * CELL_SIZE
-		if territories[cell_x][cell_y].continent is not 0:
+		cell_x = fruit_position[0] * CELL_SIZE
+		cell_y = fruit_position[1] * CELL_SIZE
+		if territories[cell_y][cell_x].continent is not 0:
 			break
 
 		for pos in snake_body:
@@ -105,12 +105,12 @@ def snaker(screen, territories, startx, starty):
 		pygame.draw.rect(screen, BLACK, pygame.Rect(
 			fruit_position[0], fruit_position[1], 10, 10))
 
-		
+
 		for block in snake_body[1:]:
 			if fruit_position[0] == block[0] and fruit_position[1] == block[1]:
 				dead = True
 				break
-			
+
 		if dead:
 			break
 

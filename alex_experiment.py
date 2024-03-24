@@ -2,7 +2,7 @@ import pygame
 import random
 from enum import Enum
 from hud import *
-from snake.py import snaker as paul_muadib_atreides_snake_game
+from snake import snaker as paul_muadib_atreides_snake_game
 
 # Define colors
 WHITE = (255, 255, 255)
@@ -225,10 +225,11 @@ def main():
                     cell_y = y // CELL_SIZE
                     territory = territories[cell_y][cell_x]
 
-                    if not territory.owner:
+                    if phase and territory.owner is None and selected_attacker is not None and selected_attacker.is_adjacent(territory):
+                        print("hello")
+                        paul_muadib_atreides_snake_game(screen, territories, x, y)
                         continue
-
-                    if territory.owner == players[player_turn] and mx_troops > 0 and not phase:
+                    elif territory.owner == players[player_turn] and mx_troops > 0 and not phase:
                         territory.troops += 1
                         mx_troops -= 1
                         font = pygame.font.Font(None, 19)
@@ -265,10 +266,6 @@ def main():
                         screen.blit(text_surface, text_rect)
 
                         selected_attacker = None
-
-                    elif phase and territory.owner is None:
-                            paul_muadib_atreides_snake_game(screen, territories, x, y)
-                            continue
 
         pygame.display.flip()
 
