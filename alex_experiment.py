@@ -265,6 +265,7 @@ def main():
                         if selected_attacker.troops > 1:
                             cells = paul_muadib_atreides_snake_game(screen, territories, x, y, players[player_turn].color)
                         else:
+                            pygame.draw.rect(screen, (255, 255, 255), (800, 225, 250, 60))
                             text_surface = font.render(f"Not enough troops", True, (0, 0, 0))
                             text_rect = text_surface.get_rect(center=(925, 250))
                             screen.blit(text_surface, text_rect)
@@ -275,6 +276,7 @@ def main():
 
                         if cells == 0:
                             selected_attacker.troops = 1
+                            pygame.draw.rect(screen, (255, 255, 255), (800, 225, 250, 60))
                             text_surface = font.render(f"Shai Hulud killed your troops", True, (0, 0, 0))
                             text_rect = text_surface.get_rect(center=(925, 250))
                             screen.blit(text_surface, text_rect)
