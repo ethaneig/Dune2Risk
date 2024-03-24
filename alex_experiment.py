@@ -124,11 +124,16 @@ def max_troops(player: Player, territories, num_players):
 
     mx_trps += max(0, player.gained // 3)
 
+    owned = 0
+
     # Continent troop bonus
     for continent in continents:
         if continent.is_owned(player):
-            print("here")
             mx_trps += continent.score
+            owned += 1
+
+    if owned == len(continents):
+        return False
 
     return mx_trps
 
@@ -193,10 +198,10 @@ def main():
     text_rect = text_surface.get_rect(center=(925, 250))
     screen.blit(text_surface, text_rect)
 
-    while running:
+    while mx_troops:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                mx_troops = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:  # Left mouse button
                     x, y = event.pos
@@ -228,7 +233,17 @@ def main():
                     if phase and territory.owner is None and selected_attacker is not None and selected_attacker.is_adjacent(territory):
                         sound = Sound(os.path.join('Dune scream song meme.mp3'))
                         sound.play()
-                        cells = paul_muadib_atreides_snake_game(screen, territories, x, y, players[player_turn].color)
+
+                        if selected_attacker.troops > 1:
+                            cells = paul_muadib_atreides_snake_game(screen, territories, x, y, players[player_turn].color)
+                        else:
+                            text_surface = font.render(f"Not enough troops", True, (0, 0, 0))
+                            text_rect = text_surface.get_rect(center=(925, 250))
+                            screen.blit(text_surface, text_rect)
+                            text_surface = font.render(f"to enter the desert", True, (0, 0, 0))
+                            text_rect = text_surface.get_rect(center=(925, 265))
+                            screen.blit(text_surface, text_rect)
+                            continue
 
                         if cells == 0:
                             selected_attacker.troops = 1
