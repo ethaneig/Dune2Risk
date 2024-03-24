@@ -32,7 +32,7 @@ def snaker(screen, territories, startx, starty, color):
 
 	# setting default snake direction towards
 	# right
-	direction = 'RIGHT'
+	direction = 'NONE'
 	change_to = direction
 
 	snakedir = 'RIGHT'
@@ -119,7 +119,7 @@ def snaker(screen, territories, startx, starty, color):
 			cell_x = pos[0] // CELL_SIZE
 			cell_y = pos[1] // CELL_SIZE
 			if territories[cell_y][cell_x].continent == 0:
-				pygame.draw.rect(screen, WHITE, pygame.Rect(pos[0], pos[1], 10, 10))
+				pygame.draw.rect(screen, WHITE, pygame.Rect(pos[0], pos[1], 20, 20))
 
 		pygame.draw.rect(screen, color, pygame.Rect(fruit_position[0], fruit_position[1], 10, 10))
 
