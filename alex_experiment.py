@@ -41,8 +41,8 @@ class Player:
         self.territories = []
         self.gained = 0
 
-    def update_territories():
-        self.territories = [territory for territory in territory if territory.owner == self]
+#    def update_territories():
+#        self.territories = [territory for territory in territory if territory.owner == self]
 
 class Continent:
     def __init__(self, name, territories):
@@ -54,11 +54,11 @@ class Continent:
     def add_territory(self, territory):
         self.territories.append(territory)
 
-    def is_owned(player):
+    def is_owned(self, player):
         for territory in self.territories:
             if territory.owner != player:
                 return False
-        self.owner = players.index(player)
+        self.owner = player
         return True
 
 class Territory:
@@ -112,11 +112,14 @@ def max_troops(player: Player, territories, continents, num_players):
     # 1 additional troop for every 3 territories above start
     mx_trps = 3
 
-    mx_trps += max(0, player.gained // 3)
+    mx_trps += max(0, (len(player.territories) - len(territories) // num_players) // 3)
+
+    print((len(player.territories) - len(territories) // num_players) // 3)
+    print(len(player.territories))
 
     # Continent troop bonus
     for continent in continents:
-        if player == continent.owner:
+        if continent.is_owned(player):
             mx_trps += continent.score
 
     return mx_trps
@@ -171,6 +174,8 @@ def main():
     player_turn = 0
     phase = 0
     selected_attacker = None
+    mx_troops = max_troops(players[player_turn], territories, continents, NUM_PLAYERS)
+
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -185,6 +190,7 @@ def main():
                                 if(player_turn == NUM_PLAYERS):
                                     player_turn = 0
                                 phase = 0
+                                mx_troops = max_troops(players[player_turn], territories, continents, NUM_PLAYERS)
                             else:
                                 phase = 1
                             draw_hud(screen, phase, player_turn)
@@ -195,9 +201,6 @@ def main():
                     cell_x = x // CELL_SIZE
                     cell_y = y // CELL_SIZE
                     territory = territories[cell_y][cell_x]
-
-                    #if it's the right player
-                    mx_troops = max_troops(players[player_turn], territories, continents, NUM_PLAYERS)
 
                     print(mx_troops)
 

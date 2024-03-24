@@ -72,8 +72,8 @@ def attack(screen, attacker, defender):
         defender.troops = max(1, attacker.troops - 1)
         defender.owner = attacker.owner
         attacker.troops = 1
-        attacker.owner.gained += 1
-        defender.owner.gained -= 1
+        attacker.owner.add_gained(1)
+        defender.owner.add_gained(-1)
         text_surface = font.render(f"{attacker.owner.name} conquered", True, (0, 0, 0))
         text_rect = text_surface.get_rect(center=(925, 250))
         screen.blit(text_surface, text_rect)
