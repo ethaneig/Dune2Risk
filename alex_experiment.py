@@ -119,7 +119,7 @@ def draw_hud(screen, phase, player_turn):
     # Blit the HUD onto the screen
     screen.blit(hud_surface, (screen.get_width() - HUD_WIDTH, 0))
 
-def attack(attacker: Territory, defender: Territory):
+def attack(attacker, defender):
     # Ensure attacker has at least 2 troops (1 for attacking and 1 for defense)
     player = attacker.owner
     if attacker.troops < 2:
