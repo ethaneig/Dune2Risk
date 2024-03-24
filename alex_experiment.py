@@ -133,7 +133,7 @@ def max_troops(player: Player, territories, num_players):
             owned += 1
 
     if owned == len(continents):
-        return False
+        return -1
 
     return mx_trps
 
@@ -198,7 +198,7 @@ def main():
     text_rect = text_surface.get_rect(center=(925, 250))
     screen.blit(text_surface, text_rect)
 
-    while mx_troops:
+    while (mx_troops + 1):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 mx_troops = False
