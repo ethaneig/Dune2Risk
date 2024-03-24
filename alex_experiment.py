@@ -183,7 +183,7 @@ def main():
     text_rect = text_surface.get_rect(center=(525, 100))
     screen.blit(text_surface, text_rect)
     font = pygame.font.Font("Dune_Rise.ttf", 24)
-    text_surface = font.render(f"Press click to start", True, (255,0,0))
+    text_surface = font.render(f"Click to start", True, (255,0,0))
     text_rect = text_surface.get_rect(center=(525, 135))
     screen.blit(text_surface, text_rect)
     sound = Sound(os.path.join('lisanalgaib.mp3'))
@@ -305,6 +305,18 @@ def main():
                         text_surface = font.render(str(new_territory.troops), True, new_territory.owner.color)
                         text_rect = text_surface.get_rect(center=(cell_x * CELL_SIZE + CELL_SIZE // 2, cell_y * CELL_SIZE + CELL_SIZE // 2))
                         screen.blit(text_surface, text_rect)
+                        for y, row in enumerate(territories):
+                            for x, territory in enumerate(row):
+                                if not territory.continent:
+                                    pygame.draw.rect(screen, territory.color, (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
+                                    continue
+                                pygame.draw.rect(screen, (0,0,0),(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
+                                pygame.draw.rect(screen, territory.color, (x * CELL_SIZE + 1, y * CELL_SIZE + 1, CELL_SIZE -2, CELL_SIZE-2))
+                                if territory.troops > 0:
+                                    font = pygame.font.Font(None, 24)
+                                    text_surface = font.render(str(territory.troops), True, territory.owner.color)
+                                    text_rect = text_surface.get_rect(center=(x * CELL_SIZE + CELL_SIZE // 2, y * CELL_SIZE + CELL_SIZE // 2))
+                                    screen.blit(text_surface, text_rect)
 
                         selected_attacker = None
                         continue
