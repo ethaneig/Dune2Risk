@@ -14,6 +14,7 @@ from hud import *
 
 playercolors = [(0,0,0), (150, 75, 0), (255, 0, 0)]
 
+continent_names = ["North America", "South America", "Europe", "Africa", "Australia", "Asia"]
 continentcolors =  [
     (0, 0, 255), #blue water
     (255,105,180),      # North America (pink)
@@ -44,9 +45,18 @@ class Player:
         self.territories = [territory for territory in territory if territory.owner == self]
 
 class Continent:
-    def __init__(self, name):
+    def __init__(self, name, territories):
         self.name = name
-        self.territories = [territory for territory in territory if territory.continent == self]
+        self.territories = [territory for territory in territories if territory.continent == self]
+        self.owned = 0
+        self.score = len(self.territories) // 2
+
+    def is_owned(player):
+        for territory in self.territories:
+            if territory.owner != player:
+                return False
+        self.owned = players.index(player)
+        return True
 
 class Territory:
     def __init__(self, continent=0, troops=1, owner=None, location=None):
@@ -131,6 +141,13 @@ def main():
                 territories[y][x] = Territory(continent=designation, troops=random.randint(1,3), owner=random.choice(players), location = (y,x))
             else:
                 territories[y][x] = Territory(continent=designation, troops=troops, location = (y,x))
+
+    def generate_continent():
+        for continent in range(num_continents):
+            Continent(continent_names[continent], territories)
+        pass
+
+    generate_continent()
 
     running = True
 
