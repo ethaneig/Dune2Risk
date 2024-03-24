@@ -112,7 +112,7 @@ def max_troops(player: Player, territories, num_players):
     # 1 additional troop for every 3 territories above start
     mx_trps = 3
 
-    mx_trps += max(0, player.gained)
+    mx_trps += max(0, player.gained // 3)
 
     # Continent troop bonus
     for continent in continents:
