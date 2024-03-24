@@ -124,7 +124,7 @@ def snaker(screen, territories, startx, starty, color):
 		pygame.draw.rect(screen, color, pygame.Rect(fruit_position[0], fruit_position[1], 10, 10))
 
 		for block in snake_body:
-			if abs(block[0] - fruit_position[0]) < 10 and abs(block[1] - fruit_position[1]) < 10:
+			if abs(block[0] - fruit_position[0]) < 20 and abs(block[1] - fruit_position[1]) < 20:
 				dead = True
 				break
 
