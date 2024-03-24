@@ -16,7 +16,7 @@ class Sound:
   def play(self):
     pygame.mixer.Sound.play(self.sound)
 
-def attack(screen, attacker, defender):
+def attack(screen, attacker, defender, snakemode = False):
     # Ensure attacker has at least 2 troops (1 for attacking and 1 for defense)
     player = attacker.owner
     font = pygame.font.Font(None, 19)
@@ -30,7 +30,7 @@ def attack(screen, attacker, defender):
         screen.blit(text_surface, text_rect)
         return
 
-    if attacker.location[0] != defender.location[0] + 1 and attacker.location[0] != defender.location[0] - 1 and attacker.location[1] != defender.location[1] + 1 and attacker.location[1] != defender.location[1] - 1:
+    if not snakemode and (attacker.location[0] != defender.location[0] + 1 and attacker.location[0] != defender.location[0] - 1 and attacker.location[1] != defender.location[1] + 1 and attacker.location[1] != defender.location[1] - 1):
         text_surface = font.render(f"Attack is not against a", True, (0, 0, 0))
         text_rect = text_surface.get_rect(center=(925, 250))
         screen.blit(text_surface, text_rect)

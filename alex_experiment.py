@@ -242,7 +242,7 @@ def main():
                             selected_attacker.troops = 1
                         else:
                             while(selected_attacker.troops > 1 and new_territory.troops > 0):
-                                attack(screen, selected_attacker, new_territory)
+                                attack(screen, selected_attacker, new_territory, True)
                             selected_attacker.troops = 1
 
                         pygame.draw.rect(screen, selected_attacker.color, (attackx * CELL_SIZE + 1, attacky * CELL_SIZE + 1, CELL_SIZE -2, CELL_SIZE-2))
