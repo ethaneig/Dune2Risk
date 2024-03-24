@@ -10,12 +10,12 @@ HUD_WIDTH = 250
 HUD_HEIGHT = 600
 HUD_BG_COLOR = (200, 200, 200)
 
-playercolors = [(0,0,0), (150, 75, 0), (255, 0, 0)]
+playercolors = [(0,0,0), (255,105,180), (255, 0, 0), (0, 0, 255)]
 
 continent_names = ["North America", "South America", "Europe", "Africa", "Australia", "Asia"]
 continentcolors =  [
     (0, 0, 255), #blue water
-    (255,105,180),      # North America (pink)
+    (150, 75, 0),      # North America (brown)
     (255, 165, 0),    # South America (Orange)
     (255, 255, 0),    # Europe (Yellow)
     (0, 128, 0),      # Africa (Green)
@@ -31,7 +31,7 @@ CELL_SIZE = 40
 NUM_CONTINENTS = 6
 NUM_ROWS = SCREEN_HEIGHT // CELL_SIZE
 NUM_COLS = SCREEN_WIDTH // CELL_SIZE
-NUM_PLAYERS = 2
+NUM_PLAYERS = 4
 
 class Player:
     def __init__(self, name, color):
