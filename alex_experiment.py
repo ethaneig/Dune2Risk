@@ -226,10 +226,11 @@ def main():
                     territory = territories[cell_y][cell_x]
 
                     if phase and territory.owner is None and selected_attacker is not None and selected_attacker.is_adjacent(territory):
-                        print("hello")
                         sound = Sound(os.path.join('Dune scream song meme.mp3'))
                         sound.play()
-                        new_territory = paul_muadib_atreides_snake_game(screen, territories, x, y, players[player_turn].color)
+                        cell_y, cell_x = paul_muadib_atreides_snake_game(screen, territories, x, y, players[player_turn].color)
+
+                        new_territory = territories[cell_y][cell_x]
 
                         if new_territory == 0:
                             selected_attacker.troops = 1
@@ -247,9 +248,9 @@ def main():
                         text_rect = text_surface.get_rect(center=(attackx * CELL_SIZE + CELL_SIZE // 2, attacky * CELL_SIZE + CELL_SIZE // 2))
                         screen.blit(text_surface, text_rect)
 
-                        pygame.draw.rect(screen, territory.color, (cell_x * CELL_SIZE + 1, cell_y * CELL_SIZE + 1, CELL_SIZE -2, CELL_SIZE-2))
+                        pygame.draw.rect(screen, new_territory.color, (cell_x * CELL_SIZE + 1, cell_y * CELL_SIZE + 1, CELL_SIZE -2, CELL_SIZE-2))
                         font = pygame.font.Font(None, 24)
-                        text_surface = font.render(str(territory.troops), True, territory.owner.color)
+                        text_surface = font.render(str(new_territory.troops), True, new_territory.owner.color)
                         text_rect = text_surface.get_rect(center=(cell_x * CELL_SIZE + CELL_SIZE // 2, cell_y * CELL_SIZE + CELL_SIZE // 2))
                         screen.blit(text_surface, text_rect)
 

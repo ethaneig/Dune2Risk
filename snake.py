@@ -105,7 +105,7 @@ def snaker(screen, territories, startx, starty, color):
 
 
 		if territories[cell_y][cell_x].continent != 0:
-			return territories[cell_y][cell_x]
+			return (cell_y, cell_x)
 
 
 		for y, row in enumerate(territories):
