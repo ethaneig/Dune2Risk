@@ -10,12 +10,12 @@ HUD_WIDTH = 250
 HUD_HEIGHT = 600
 HUD_BG_COLOR = (200, 200, 200)
 
-playercolors = [(0,0,0), (150, 75, 0), (255, 0, 0)]
+playercolors = [(0,0,0), (255,105,180), (255, 0, 0), (0, 0, 255)]
 
 continent_names = ["North America", "South America", "Europe", "Africa", "Australia", "Asia"]
 continentcolors =  [
     (0, 0, 255), #blue water
-    (255,105,180),      # North America (pink)
+    (150, 75, 0),      # North America (brown)
     (255, 165, 0),    # South America (Orange)
     (255, 255, 0),    # Europe (Yellow)
     (0, 128, 0),      # Africa (Green)
@@ -31,7 +31,7 @@ CELL_SIZE = 40
 NUM_CONTINENTS = 6
 NUM_ROWS = SCREEN_HEIGHT // CELL_SIZE
 NUM_COLS = SCREEN_WIDTH // CELL_SIZE
-NUM_PLAYERS = 2
+NUM_PLAYERS = 4
 
 class Player:
     def __init__(self, name, color):
@@ -40,9 +40,6 @@ class Player:
         self.troops = 0
         self.territories = []
         self.gained = 0
-
-#    def update_territories():
-#        self.territories = [territory for territory in territory if territory.owner == self]
 
 class Continent:
     def __init__(self, name, territories):
@@ -108,7 +105,10 @@ def draw_grid(screen):
             rect = pygame.Rect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
             pygame.draw.rect(screen, WHITE, rect, 1)
 
-def max_troops(player: Player, territories, continents, num_players):
+def max_troops(player: Player, territories, num_players):
+    # refresh continents
+    continents = [Continent(name=designation, territories=[territory for row in territories for territory in row if territory.continent == designation]) for designation in range(1, NUM_CONTINENTS + 1)]
+
     # 1 additional troop for every 3 territories above start
     mx_trps = 3
 
@@ -117,6 +117,7 @@ def max_troops(player: Player, territories, continents, num_players):
     # Continent troop bonus
     for continent in continents:
         if continent.is_owned(player):
+            print("here")
             mx_trps += continent.score
 
     return mx_trps
@@ -146,7 +147,6 @@ def main():
             designation, troops, _ = grid[y][x]
             if designation:
                 territories[y][x] = Territory(continent=designation, troops=random.randint(1,3), owner=random.choice(players), location = (y,x))
-                continents[designation - 1].add_territory(territories[y][x])
             else:
                 territories[y][x] = Territory(continent=designation, troops=troops, location = (y,x))
 
@@ -171,7 +171,7 @@ def main():
     player_turn = 0
     phase = 0
     selected_attacker = None
-    mx_troops = max_troops(players[player_turn], territories, continents, NUM_PLAYERS)
+    mx_troops = max_troops(players[player_turn], territories, NUM_PLAYERS)
 
     while running:
         for event in pygame.event.get():
@@ -187,7 +187,7 @@ def main():
                                 if(player_turn == NUM_PLAYERS):
                                     player_turn = 0
                                 phase = 0
-                                mx_troops = max_troops(players[player_turn], territories, continents, NUM_PLAYERS)
+                                mx_troops = max_troops(players[player_turn], territories, NUM_PLAYERS)
                             else:
                                 phase = 1
                             draw_hud(screen, phase, player_turn)
