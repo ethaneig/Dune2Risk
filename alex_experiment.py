@@ -171,7 +171,12 @@ def main():
     player_turn = 0
     phase = 0
     selected_attacker = None
-    mx_troops = max_troops(players[player_turn], territories, NUM_PLAYERS)
+    mx_troops = max_troops(players[player_turn], territories, continents, NUM_PLAYERS)
+    font = pygame.font.Font(None, 19)
+    pygame.draw.rect(screen, (200, 200, 200), (800, 225, 250, 60))
+    text_surface = font.render(f"Troops left to place: {mx_troops}", True, (0, 0, 0))
+    text_rect = text_surface.get_rect(center=(925, 250))
+    screen.blit(text_surface, text_rect)
 
     while running:
         for event in pygame.event.get():
@@ -191,6 +196,12 @@ def main():
                             else:
                                 phase = 1
                             draw_hud(screen, phase, player_turn)
+                            if phase == 0:
+                                font = pygame.font.Font(None, 19)
+                                pygame.draw.rect(screen, (200, 200, 200), (800, 225, 250, 60))
+                                text_surface = font.render(f"Troops left to place: {mx_troops}", True, (0, 0, 0))
+                                text_rect = text_surface.get_rect(center=(925, 250))
+                                screen.blit(text_surface, text_rect)
                         continue
                         #do hud stuff(end attack, end placing troops)
 
@@ -202,7 +213,11 @@ def main():
                     if territory.owner == players[player_turn] and mx_troops > 0 and not phase:
                         territory.troops += 1
                         mx_troops -= 1
-
+                        font = pygame.font.Font(None, 19)
+                        pygame.draw.rect(screen, (200, 200, 200), (800, 225, 250, 60))
+                        text_surface = font.render(f"Troops left to place: {mx_troops}", True, (0, 0, 0))
+                        text_rect = text_surface.get_rect(center=(925, 250))
+                        screen.blit(text_surface, text_rect)
                         #redraw that tile
                         pygame.draw.rect(screen, territory.color, (cell_x * CELL_SIZE + 1, cell_y * CELL_SIZE + 1, CELL_SIZE -2, CELL_SIZE-2))
 
@@ -211,7 +226,6 @@ def main():
                         text_rect = text_surface.get_rect(center=(cell_x * CELL_SIZE + CELL_SIZE // 2, cell_y * CELL_SIZE + CELL_SIZE // 2))
                         screen.blit(text_surface, text_rect)
                     elif phase and territory.owner == players[player_turn]:
-                        print("Choose Territory to Attack")
                         selected_attacker = territory
                         attackx = cell_x
                         attacky = cell_y
