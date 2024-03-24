@@ -170,6 +170,27 @@ def main():
             else:
                 territories[y][x] = Territory(continent=designation, troops=troops, location = (y,x))
 
+
+    running = True
+    texture=os.path.join(f'Start.png')
+    img2 = pygame.image.load(texture)
+    img2 = pygame.transform.scale(img2, (1050, 600))
+    img_center = (525, 300)
+    texture_rect = img2.get_rect(center = img_center)
+    screen.blit(img2,texture_rect)
+    font = pygame.font.Font(None, 24)
+    text_surface = font.render(f"Press click to start", True, (0,0,0))
+    text_rect = text_surface.get_rect(center=(400, 300))
+    screen.blit(text_surface, text_rect)
+    pygame.display.flip()
+    while(running):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+                break
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                running = False
+                break
     running = True
 
     #draw initial territories
@@ -201,7 +222,8 @@ def main():
     while (mx_troops + 1):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                mx_troops = False
+                mx_troops = -1
+                break
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:  # Left mouse button
                     x, y = event.pos
