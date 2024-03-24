@@ -67,7 +67,7 @@ class Territory:
         self.location = location
 
 def generate_grid(rows, cols, NUM_CONTINENTS):
-    grid = [[(0, 0, None) for _ in range(cols)] for _ in range(rows)]  # Initialize grid with water ('w')
+    grid = [[(0, 0, (0,0,0)) for _ in range(cols)] for _ in range(rows)]  # Initialize grid with water ('w')
 
     def sum_territory(grid, country_label):
         territory_count = 0
@@ -112,7 +112,7 @@ def max_troops(player: Player, territories, num_players):
     # 1 additional troop for every 3 territories above start
     mx_trps = 3
 
-    mx_trps += max(0, player.gained)
+    mx_trps += max(0, player.gained // 3)
 
     # Continent troop bonus
     for continent in continents:
