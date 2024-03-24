@@ -201,7 +201,7 @@ def main():
                 if event.button == 1:  # Left mouse button
                     x, y = event.pos
                     if(x > SCREEN_WIDTH):
-                        if(x > 850 and x < 1000 and y > 300 and y < 350):
+                        if(x > 850 and x < 950 and y > 300 and y < 350):
                             if phase == 1:
                                 player_turn += 1
                                 if(player_turn == NUM_PLAYERS):
@@ -230,9 +230,9 @@ def main():
                         sound.play()
                         paul_muadib_atreides_snake_game(screen, territories, x, y)
                         continue
-                    elif territory.owner is None:
+                    if territory.owner is None:
                         continue
-                    elif territory.owner == players[player_turn] and mx_troops > 0 and not phase:
+                    if territory.owner == players[player_turn] and mx_troops > 0 and not phase:
                         territory.troops += 1
                         mx_troops -= 1
                         font = pygame.font.Font(None, 19)
