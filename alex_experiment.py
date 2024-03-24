@@ -1,7 +1,7 @@
 import pygame
 import random
 from enum import Enum
-
+from hud import *
 
 # Define colors
 WHITE = (255, 255, 255)
@@ -9,8 +9,6 @@ BLACK = (0, 0, 0)
 HUD_WIDTH = 250
 HUD_HEIGHT = 600
 HUD_BG_COLOR = (200, 200, 200)
-
-from hud import *
 
 playercolors = [(0,0,0), (150, 75, 0), (255, 0, 0)]
 
