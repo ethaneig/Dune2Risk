@@ -233,7 +233,7 @@ def main():
 
                         territory.troops = selected_attacker.troops - 1
                         selected_attacker.troops = 1
-                        
+
                         pygame.draw.rect(screen, selected_attacker.color, (attackx * CELL_SIZE + 1, attacky * CELL_SIZE + 1, CELL_SIZE -2, CELL_SIZE-2))
                         font = pygame.font.Font(None, 24)
                         text_surface = font.render(str(selected_attacker.troops), True, selected_attacker.owner.color)
