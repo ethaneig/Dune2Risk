@@ -10,19 +10,20 @@ HUD_HEIGHT = 600
 HUD_BG_COLOR = (200, 200, 200)
 
 playercolors = [(0,0,0), (150, 75, 0), (255, 0, 0)]
+continent_names = ["North America", "South America", "Europe", "Africa", "Australia", "Asia"]
 
 continentcolors =  [
-    (0, 0, 255), #blue water
+    (0, 0, 255),        #blue water
     (255,105,180),      # North America (pink)
-    (255, 165, 0),    # South America (Orange)
-    (255, 255, 0),    # Europe (Yellow)
-    (0, 128, 0),      # Africa (Green)
-    (128, 0, 128),     # Australia (Purple)
-    (0, 255, 255)  #asian(aqua)
+    (255, 165, 0),      # South America (Orange)
+    (255, 255, 0),      # Europe (Yellow)
+    (0, 128, 0),        # Africa (Green)
+    (128, 0, 128),      # Australia (Purple)
+    (0, 255, 255)       # Asia (aqua)
 ]
 
 # Define constants
-num_countries = 6
+num_continents = 6
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 CELL_SIZE = 40
@@ -36,14 +37,20 @@ class Player:
         self.color = color
         self.troops = 0
         self.territories = []
-    
-    def update_territories():
-        self.territories = [territory for territory in territory if territory.owner == self]
 
 class Continent:
-    def __init__(self, name):
+    def __init__(self, name, territories):
         self.name = name
-        self.territories = [territory for territory in territory if territory.continent == self]
+        self.territories = [territory for territory in territories if territory.continent == self]
+        self.owned = 0
+        self.score = len(self.territories) // 2
+
+    def is_owned(player):
+        for territory in self.territories:
+            if territory.owner != player:
+                return False
+        self.owned = players.index(player)
+        return True
 
 class Territory:
     def __init__(self, continent=0, troops=1, owner=None, location=None):
@@ -73,8 +80,8 @@ def generate_grid(rows, cols):
                     grid[new_row][new_col] = (label, 0, None)  # Set continent with 0 troops and no owner
                     generate_country(new_row, new_col, label)
 
-    global num_countries  # Random number of countries between 3 and 6
-    country_labels = [i for i in range(1, num_countries + 1)]
+    global num_continents  # Random number of countries between 3 and 6
+    country_labels = [i for i in range(1, num_continents + 1)]
 
     for label in country_labels:
         start_row = random.randint(0, rows - 1)
@@ -190,6 +197,13 @@ def main():
                 territories[y][x] = Territory(continent=designation, troops=1, owner=random.choice(players), location = (y,x))
             else:
                 territories[y][x] = Territory(continent=designation, troops=troops, location = (y,x))
+
+    def generate_continent():
+        for continent in range(num_continents):
+            Continent(continent_names[continent], territories)
+        pass
+
+    generate_continent()
 
     running = True
 
