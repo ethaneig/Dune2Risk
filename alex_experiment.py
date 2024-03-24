@@ -149,8 +149,11 @@ def attack(attacker: Territory, defender: Territory):
     # Check if defender lost all troops
     if defender.troops <= 0:
         # Attacker conquers the territory
-        defender.troops = max(1, attacker.troops - 1)  # Leave at least 1 troop in the conquered territory
+        
+        #Update Defender
+        defender.troops = max(1, attacker.troops - 1)
         defender.owner = attacker.owner
+
         print(f"{attacker.owner} conquered {defender.location}!")
     else:
         print("Defender successfully defended the territory.")
@@ -177,7 +180,6 @@ def main():
                 territories[y][x] = Territory(continent=designation, troops=troops, location = (y,x))
 
     running = True
-
 
     #draw initial territories
     for y, row in enumerate(territories):
@@ -241,7 +243,23 @@ def main():
                         continue
                     elif phase and selected_attacker is not None:
                         attack(selected_attacker, territory)
+
+                        selected_attacker.troops = 1
+
+                        pygame.draw.rect(screen, selected_attacker.color, (cell_x * CELL_SIZE + 1, cell_y * CELL_SIZE + 1, CELL_SIZE -2, CELL_SIZE-2))
+                        font = pygame.font.Font(None, 24)
+                        text_surface = font.render(str(selected_attacker.troops), True, selected_attacker.owner.color)
+                        text_rect = text_surface.get_rect(center=(cell_x * CELL_SIZE + CELL_SIZE // 2, cell_y * CELL_SIZE + CELL_SIZE // 2))
+                        screen.blit(text_surface, text_rect)
+                        
+                        pygame.draw.rect(screen, territory.color, (cell_x * CELL_SIZE + 1, cell_y * CELL_SIZE + 1, CELL_SIZE -2, CELL_SIZE-2))
+                        font = pygame.font.Font(None, 24)
+                        text_surface = font.render(str(territory.troops), True, territory.owner.color)
+                        text_rect = text_surface.get_rect(center=(cell_x * CELL_SIZE + CELL_SIZE // 2, cell_y * CELL_SIZE + CELL_SIZE // 2))
+                        screen.blit(text_surface, text_rect)
+
                         selected_attacker = None
+                        
 
         pygame.display.flip()
 
