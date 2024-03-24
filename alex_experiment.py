@@ -14,7 +14,7 @@ playercolors = [(0,0,0), (255,105,180), (255, 0, 0), (0, 0, 255)]
 
 continent_names = ["North America", "South America", "Europe", "Africa", "Australia", "Asia"]
 continentcolors =  [
-    (0, 0, 255), #blue water
+    (194, 178, 128), #sand sand
     (150, 75, 0),      # North America (brown)
     (255, 165, 0),    # South America (Orange)
     (255, 255, 0),    # Europe (Yellow)
@@ -27,7 +27,7 @@ continentcolors =  [
 num_countries = 6
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
-CELL_SIZE = 40
+CELL_SIZE = 20
 NUM_CONTINENTS = 6
 NUM_ROWS = SCREEN_HEIGHT // CELL_SIZE
 NUM_COLS = SCREEN_WIDTH // CELL_SIZE
@@ -82,7 +82,7 @@ def generate_grid(rows, cols, NUM_CONTINENTS):
             new_row, new_col = row + dr, col + dc
             if 0 <= new_row < rows and 0 <= new_col < cols:
                 cell = grid[new_row][new_col]
-                if cell[0] == 0 and sum_territory(grid, label) < random.randint(10, 20):
+                if cell[0] == 0 and sum_territory(grid, label) < random.randint(20, 30):
                     grid[new_row][new_col] = (label, 0, None)  # Set continent with 0 troops and no owner
                     generate_country(new_row, new_col, label)
 
