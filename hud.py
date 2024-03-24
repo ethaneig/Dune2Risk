@@ -19,7 +19,7 @@ class Sound:
 def attack(screen, attacker, defender, snakemode = False):
     # Ensure attacker has at least 2 troops (1 for attacking and 1 for defense)
     player = attacker.owner
-    font = pygame.font.Font(None, 19)
+    font = pygame.font.Font("Dune_Rise.ttf", 10)
     pygame.draw.rect(screen, (200, 200, 200), (800, 225, 250, 60))
     if attacker.troops < 2:
         text_surface = font.render(f"Attacker doesn't have enough", True, (0, 0, 0))
@@ -110,7 +110,7 @@ def draw_hud(screen, phase, player_turn, img):
     texture_rect = img[player_turn].get_rect(center = img_center)
     hud_surface.blit(img[player_turn],texture_rect)
     # Add text to the HUD (for demonstration purposes)
-    font = pygame.font.Font(None, 24)
+    font = pygame.font.Font("Dune_Rise.ttf", 10)
     color = playercolors[player_turn]
     text_surface = font.render(f"{path[player_turn]} turn", True, color)
     text_rect = text_surface.get_rect(center=(HUD_WIDTH // 2, 50))
@@ -122,6 +122,7 @@ def draw_hud(screen, phase, player_turn, img):
     text_rect = text_surface.get_rect(center=(HUD_WIDTH // 2, 100))
     hud_surface.blit(text_surface, text_rect)
 
+    font = pygame.font.Font("Dune_Rise.ttf", 15)
     pygame.draw.rect(hud_surface, (255, 0, 0), (50, 300, 150, 50))
     text_surface = font.render("End Action", True, (0,0,0))
     text_rect = text_surface.get_rect(center=(HUD_WIDTH // 2, 325))
