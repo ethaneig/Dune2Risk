@@ -8,7 +8,7 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 HUD_WIDTH = 250
 HUD_HEIGHT = 600
-HUD_BG_COLOR = (200, 200, 200)
+HUD_BG_COLOR = WHITE#(200, 200, 200)
 
 playercolors = [(255, 0, 0), (0,0,0), (255,105,180), (0, 0, 255)]
 
@@ -130,8 +130,13 @@ def main():
     pygame.display.set_caption("Risk Game")
     global playercolors
     players = [Player(f"Player {i+1}", (playercolors[i])) for i in range(NUM_PLAYERS)]
-
-    territories = [[Territory() for _ in range(NUM_COLS)] for _ in range(NUM_ROWS)]
+    path = ["atreides", "harkonnen", "corrino", "zendaya"]
+    img = [0, 0, 0, 0]
+    for i in range(4):
+        texture=os.path.join(f'{path[i]}.png')
+        img[i] = pygame.image.load(texture)
+        img[i] = pygame.transform.scale(img[i], (100, 100))
+        territories = [[Territory() for _ in range(NUM_COLS)] for _ in range(NUM_ROWS)]
 
     # assign territories to players (randomly for demonstration)
     grid = generate_grid(NUM_ROWS, NUM_COLS, NUM_CONTINENTS)
@@ -160,7 +165,7 @@ def main():
                 continue
             pygame.draw.rect(screen, (0,0,0),(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
             pygame.draw.rect(screen, territory.color, (x * CELL_SIZE + 1, y * CELL_SIZE + 1, CELL_SIZE -2, CELL_SIZE-2))
-            draw_hud(screen, 0, 0)
+            draw_hud(screen, 0, 0, img)
             if territory.troops > 0:
                 font = pygame.font.Font(None, 24)
                 text_surface = font.render(str(territory.troops), True, territory.owner.color)
@@ -173,7 +178,7 @@ def main():
     selected_attacker = None
     mx_troops = max_troops(players[player_turn], territories, NUM_PLAYERS)
     font = pygame.font.Font(None, 19)
-    pygame.draw.rect(screen, (200, 200, 200), (800, 225, 250, 60))
+    pygame.draw.rect(screen, WHITE, (800, 225, 250, 30))
     text_surface = font.render(f"Troops left to place: {mx_troops}", True, (0, 0, 0))
     text_rect = text_surface.get_rect(center=(925, 250))
     screen.blit(text_surface, text_rect)
@@ -195,10 +200,10 @@ def main():
                                 mx_troops = max_troops(players[player_turn], territories, NUM_PLAYERS)
                             else:
                                 phase = 1
-                            draw_hud(screen, phase, player_turn)
+                            draw_hud(screen, phase, player_turn, img)
                             if phase == 0:
                                 font = pygame.font.Font(None, 19)
-                                pygame.draw.rect(screen, (200, 200, 200), (800, 225, 250, 60))
+                                pygame.draw.rect(screen, WHITE, (800, 225, 250, 30))
                                 text_surface = font.render(f"Troops left to place: {mx_troops}", True, (0, 0, 0))
                                 text_rect = text_surface.get_rect(center=(925, 250))
                                 screen.blit(text_surface, text_rect)
@@ -209,12 +214,14 @@ def main():
                     cell_x = x // CELL_SIZE
                     cell_y = y // CELL_SIZE
                     territory = territories[cell_y][cell_x]
+                    if not territory.owner:
+                        continue
 
                     if territory.owner == players[player_turn] and mx_troops > 0 and not phase:
                         territory.troops += 1
                         mx_troops -= 1
                         font = pygame.font.Font(None, 19)
-                        pygame.draw.rect(screen, (200, 200, 200), (800, 225, 250, 60))
+                        pygame.draw.rect(screen, WHITE, (800, 225, 250, 30))
                         text_surface = font.render(f"Troops left to place: {mx_troops}", True, (0, 0, 0))
                         text_rect = text_surface.get_rect(center=(925, 250))
                         screen.blit(text_surface, text_rect)
