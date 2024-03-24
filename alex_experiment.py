@@ -1,7 +1,7 @@
 import pygame
 import random
 from enum import Enum
-
+from hud import *
 
 # Define colors
 WHITE = (255, 255, 255)
@@ -10,10 +10,9 @@ HUD_WIDTH = 250
 HUD_HEIGHT = 600
 HUD_BG_COLOR = (200, 200, 200)
 
-from hud import *
-
 playercolors = [(0,0,0), (150, 75, 0), (255, 0, 0)]
 
+continent_names = ["North America", "South America", "Europe", "Africa", "Australia", "Asia"]
 continentcolors =  [
     (0, 0, 255), #blue water
     (255,105,180),      # North America (pink)
@@ -29,6 +28,7 @@ num_countries = 6
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 CELL_SIZE = 40
+NUM_CONTINENTS = 6
 NUM_ROWS = SCREEN_HEIGHT // CELL_SIZE
 NUM_COLS = SCREEN_WIDTH // CELL_SIZE
 NUM_PLAYERS = 2
@@ -44,9 +44,21 @@ class Player:
         self.territories = [territory for territory in territory if territory.owner == self]
 
 class Continent:
-    def __init__(self, name):
+    def __init__(self, name, territories):
         self.name = name
-        self.territories = [territory for territory in territory if territory.continent == self]
+        self.territories = territories
+        self.owned = 0
+        self.score = len(self.territories) // 2
+
+    def add_territory(self, territory):
+        self.territories.append(territory)
+
+    def is_owned(player):
+        for territory in self.territories:
+            if territory.owner != player:
+                return False
+        self.owned = players.index(player)
+        return True
 
 class Territory:
     def __init__(self, continent=0, troops=1, owner=None, location=None):
@@ -56,7 +68,7 @@ class Territory:
         self.color = continentcolors[continent]
         self.location = location
 
-def generate_grid(rows, cols):
+def generate_grid(rows, cols, NUM_CONTINENTS):
     grid = [[(0, 0, None) for _ in range(cols)] for _ in range(rows)]  # Initialize grid with water ('w')
 
     def sum_territory(grid, country_label):
@@ -76,8 +88,7 @@ def generate_grid(rows, cols):
                     grid[new_row][new_col] = (label, 0, None)  # Set continent with 0 troops and no owner
                     generate_country(new_row, new_col, label)
 
-    global num_countries
-    country_labels = [i for i in range(1, num_countries + 1)]
+    country_labels = [i for i in range(1, NUM_CONTINENTS + 1)]
 
     for label in country_labels:
         start_row = random.randint(0, rows - 1)
@@ -97,6 +108,7 @@ def draw_grid(screen):
             pygame.draw.rect(screen, WHITE, rect, 1)
 
 def max_troops(player: Player, territories, continents, num_players):
+
     mx_trps = player.troops
 
     # 1 additional troop for every 3 territories above start
@@ -121,16 +133,28 @@ def main():
     territories = [[Territory() for _ in range(NUM_COLS)] for _ in range(NUM_ROWS)]
 
     # assign territories to players (randomly for demonstration)
-    grid = generate_grid(NUM_ROWS, NUM_COLS)
+    grid = generate_grid(NUM_ROWS, NUM_COLS, NUM_CONTINENTS)
 
     # generate territories
+    continents = []
+
+    for name in range(1,NUM_CONTINENTS + 1):
+        continents.append(Continent(name, []))
+
     for y in range(NUM_ROWS):
         for x in range(NUM_COLS):
             designation, troops, _ = grid[y][x]
             if designation:
                 territories[y][x] = Territory(continent=designation, troops=random.randint(1,3), owner=random.choice(players), location = (y,x))
+                continents[designation - 1].add_territory(territories[y][x])
             else:
                 territories[y][x] = Territory(continent=designation, troops=troops, location = (y,x))
+
+    # generate continents
+    continents = list()
+
+    for continent in range(1,7):
+        continents.append(Continent(continent, territories))
 
     running = True
 
