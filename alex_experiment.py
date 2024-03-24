@@ -227,7 +227,11 @@ def main():
 
                     if phase and territory.owner is None and selected_attacker is not None and selected_attacker.is_adjacent(territory):
                         print("hello")
-                        paul_muadib_atreides_snake_game(screen, territories, x, y)
+                        sound = Sound(os.path.join('Dune scream song meme.mp3'))
+                        sound.play()
+                        #paul_muadib_atreides_snake_game(screen, territories, x, y)
+                        continue
+                    elif territory.owner is None:
                         continue
                     elif territory.owner == players[player_turn] and mx_troops > 0 and not phase:
                         territory.troops += 1
