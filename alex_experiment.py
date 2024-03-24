@@ -214,6 +214,8 @@ def main():
                     cell_x = x // CELL_SIZE
                     cell_y = y // CELL_SIZE
                     territory = territories[cell_y][cell_x]
+                    if not territory.owner:
+                        continue
 
                     if territory.owner == players[player_turn] and mx_troops > 0 and not phase:
                         territory.troops += 1
