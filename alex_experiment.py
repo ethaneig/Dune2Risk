@@ -2,6 +2,7 @@ import pygame
 import random
 from enum import Enum
 from hud import *
+from snake import snaker as paul_muadib_atreides_snake_game
 
 # Define colors
 WHITE = (255, 255, 255)
@@ -65,6 +66,15 @@ class Territory:
         self.owner = owner
         self.color = continentcolors[continent]
         self.location = location
+
+    def is_adjacent(self, other):
+        sx, sy = self.location
+        ox, oy = other.location
+        if sx == ox and (sy == oy + 1 or sy == oy - 1):
+            return True
+        if sy == oy and (sx == ox + 1 or sx == ox - 1):
+            return True
+        return False
 
 def generate_grid(rows, cols, NUM_CONTINENTS):
     grid = [[(0, 0, (0,0,0)) for _ in range(cols)] for _ in range(rows)]  # Initialize grid with water ('w')
@@ -214,10 +224,16 @@ def main():
                     cell_x = x // CELL_SIZE
                     cell_y = y // CELL_SIZE
                     territory = territories[cell_y][cell_x]
-                    if not territory.owner:
-                        continue
 
-                    if territory.owner == players[player_turn] and mx_troops > 0 and not phase:
+                    if phase and territory.owner is None and selected_attacker is not None and selected_attacker.is_adjacent(territory):
+                        print("hello")
+                        sound = Sound(os.path.join('Dune scream song meme.mp3'))
+                        sound.play()
+                        #paul_muadib_atreides_snake_game(screen, territories, x, y)
+                        continue
+                    elif territory.owner is None:
+                        continue
+                    elif territory.owner == players[player_turn] and mx_troops > 0 and not phase:
                         territory.troops += 1
                         mx_troops -= 1
                         font = pygame.font.Font(None, 19)
@@ -225,6 +241,7 @@ def main():
                         text_surface = font.render(f"Troops left to place: {mx_troops}", True, (0, 0, 0))
                         text_rect = text_surface.get_rect(center=(925, 250))
                         screen.blit(text_surface, text_rect)
+
                         #redraw that tile
                         pygame.draw.rect(screen, territory.color, (cell_x * CELL_SIZE + 1, cell_y * CELL_SIZE + 1, CELL_SIZE -2, CELL_SIZE-2))
 
@@ -253,7 +270,6 @@ def main():
                         screen.blit(text_surface, text_rect)
 
                         selected_attacker = None
-
 
         pygame.display.flip()
 
