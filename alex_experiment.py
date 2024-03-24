@@ -35,6 +35,15 @@ class Player:
         self.name = name
         self.color = color
         self.troops = 0
+        self.territories = []
+    
+    def update_territories():
+        self.territories = [territory for territory in territory if territory.owner == self]
+
+class Continent:
+    def __init__(self, name):
+        self.name = name
+        self.territories = [territory for territory in territory if territory.continent == self]
 
     def max_troops(self, territories, continents):
         max_troops = self.troops
@@ -108,7 +117,10 @@ def draw_hud(screen, phase, player_turn):
     if phase == 0:
         text_surface = font.render("Place Troops", True, (0, 0, 0))
     else:
-        text_surface = font.render("Choose Countries to Attack", True, (0, 0, 0))
+        if selected_attacker is None:
+            text_surface = font.render("Choose Territory to Attack With", True, (0, 0, 0))    
+        else:
+            text_surface = font.render("Choose Territory to Attack", True, (0, 0, 0))
     text_rect = text_surface.get_rect(center=(HUD_WIDTH // 2, 100))
     hud_surface.blit(text_surface, text_rect)
 
