@@ -2,6 +2,7 @@ import pygame
 import random
 from enum import Enum
 from hud import *
+from snake.py import snaker as paul_muadib_atreides_snake_game
 
 # Define colors
 WHITE = (255, 255, 255)
@@ -65,6 +66,15 @@ class Territory:
         self.owner = owner
         self.color = continentcolors[continent]
         self.location = location
+
+    def is_adjacent(self, other):
+        sx, sy = self.location
+        ox, oy = other.location
+        if sx == ox and (sy == oy + 1 or sy == oy - 1):
+            return True
+        if sy == oy and (sx == ox + 1 or sx == ox - 1):
+            return True
+        return False
 
 def generate_grid(rows, cols, NUM_CONTINENTS):
     grid = [[(0, 0, (0,0,0)) for _ in range(cols)] for _ in range(rows)]  # Initialize grid with water ('w')
@@ -214,6 +224,7 @@ def main():
                     cell_x = x // CELL_SIZE
                     cell_y = y // CELL_SIZE
                     territory = territories[cell_y][cell_x]
+
                     if not territory.owner:
                         continue
 
@@ -255,6 +266,9 @@ def main():
 
                         selected_attacker = None
 
+                    elif phase and territory.owner is None:
+                            paul_muadib_atreides_snake_game(screen, territories, x, y)
+                            continue
 
         pygame.display.flip()
 
