@@ -36,6 +36,18 @@ class Player:
         self.color = color
         self.troops = 0
 
+    def max_troops(self, territories, continents):
+        max_troops = self.troops
+
+        # One troop for every 3 territories above max territories
+        max_troops += (len(territories) / 2) // 3
+
+        for continent, owner in continents.items():
+            if owner == self:
+                max_troops += len(territories[continent]) // 2
+
+        return max_troops
+
 class Territory:
     def __init__(self, continent=0, troops=1, owner=None, location=None):
         self.continent = continent
@@ -152,7 +164,7 @@ def attack(attacker: Territory, defender: Territory):
         defender.owner = attacker.owner
         attacker.troops = 1
 
-        print(f"{attacker.owner} conquered {defender.location}!")
+        print(f"{attacker.owner.name} conquered {defender.location}!")
     else:
         print("Defender successfully defended the territory.")
 
