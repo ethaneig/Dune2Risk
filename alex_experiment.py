@@ -225,6 +225,7 @@ def main():
                         text_surface = font.render(f"Troops left to place: {mx_troops}", True, (0, 0, 0))
                         text_rect = text_surface.get_rect(center=(925, 250))
                         screen.blit(text_surface, text_rect)
+
                         #redraw that tile
                         pygame.draw.rect(screen, territory.color, (cell_x * CELL_SIZE + 1, cell_y * CELL_SIZE + 1, CELL_SIZE -2, CELL_SIZE-2))
 

@@ -113,7 +113,7 @@ def draw_hud(screen, phase, player_turn):
         text_surface = font.render("Place Troops", True, (0, 0, 0))
     else:
         if selected_attacker is None:
-            text_surface = font.render("Choose Territory to Attack With", True, (0, 0, 0))    
+            text_surface = font.render("Choose Territory to Attack With", True, (0, 0, 0))
         else:
             text_surface = font.render("Choose Territory to Attack", True, (0, 0, 0))
     text_rect = text_surface.get_rect(center=(HUD_WIDTH // 2, 100))
@@ -168,7 +168,7 @@ def attack(attacker: Territory, defender: Territory):
     # Check if defender lost all troops
     if defender.troops <= 0:
         # Attacker conquers the territory
-        
+
         #Update Defender
         defender.troops = max(1, attacker.troops - 1)
         defender.owner = attacker.owner
@@ -277,7 +277,7 @@ def main():
                         text_surface = font.render(str(selected_attacker.troops), True, selected_attacker.owner.color)
                         text_rect = text_surface.get_rect(center=(attackx * CELL_SIZE + CELL_SIZE // 2, attacky * CELL_SIZE + CELL_SIZE // 2))
                         screen.blit(text_surface, text_rect)
-                        
+
                         pygame.draw.rect(screen, territory.color, (cell_x * CELL_SIZE + 1, cell_y * CELL_SIZE + 1, CELL_SIZE -2, CELL_SIZE-2))
                         font = pygame.font.Font(None, 24)
                         text_surface = font.render(str(territory.troops), True, territory.owner.color)
@@ -285,7 +285,7 @@ def main():
                         screen.blit(text_surface, text_rect)
 
                         selected_attacker = None
-                        
+
 
         pygame.display.flip()
 
