@@ -2,7 +2,7 @@ import os
 import time
 import random
 
-def main(): 
+def main():
     rand_list=[]
     n=5
     for i in range(n):
@@ -88,7 +88,7 @@ def main():
         time.sleep(timer)
         os.system('cls' if os.name == 'nt' else 'clear')
         lister(rand_list)
-        
+
         print("                ##")
         print("              ######")
         print("         #   ########                ###")
@@ -135,7 +135,7 @@ def main():
 
         time.sleep(timer)
         os.system('cls' if os.name == 'nt' else 'clear')
-    
+
     for num in rand_list:
         for hash in range(num):
             print("#",end="")
@@ -153,7 +153,7 @@ def main():
     print("   ###")
     print("###")
 
-        
+
 
 
 def lister(rand_list):
