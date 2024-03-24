@@ -107,14 +107,14 @@ def snaker(screen, territories, startx, starty):
 		if territories[cell_y][cell_x].continent != 0:
 			break
 
-		
+
 		for y, row in enumerate(territories):
 			for x, territory in enumerate(row):
 				if not territory.continent:
 					pygame.draw.rect(screen, territory.color, (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
 					continue
-		
-		
+
+
 		for pos in snake_body:
 			cell_x = pos[0] // CELL_SIZE
 			cell_y = pos[1] // CELL_SIZE
