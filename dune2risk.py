@@ -182,8 +182,7 @@ def main():
     path = ["House of Atreides'", "House of Harkonnen's", "House of Corrino's", "Fremen's"]
     img = [0, 0, 0, 0]
     for i in range(4):
-        texture=os.path.join(f'{path[i]}.png')
-        img[i] = pygame.image.load(texture)
+        img[i] = pygame.image.load(f'Media/Images/{path[i]}.png')
         img[i] = pygame.transform.scale(img[i], (100, 100))
         territories = [[Territory() for _ in range(NUM_COLS)] for _ in range(NUM_ROWS)]
 
@@ -205,21 +204,20 @@ def main():
                 territories[y][x] = Territory(continent=designation, troops=troops, location = (y,x))
 
     running = True
-    texture=os.path.join(f'knife_chip_shatter.jpg')
-    img2 = pygame.image.load(texture)
+    img2 = pygame.image.load(f'Media/Images/knife_chip_shatter.jpg')
     img2 = pygame.transform.scale(img2, (1050, 600))
     img_center = (525, 300)
     texture_rect = img2.get_rect(center = img_center)
     screen.blit(img2,texture_rect)
-    font = pygame.font.Font("Dune_Rise.ttf", 36)
+    font = pygame.font.Font("Media/Fonts/Dune_Rise.ttf", 36)
     text_surface = font.render(f"May Thy Knife Chip and Shatter", True, (255,0,0))
     text_rect = text_surface.get_rect(center=(525, 100))
     screen.blit(text_surface, text_rect)
-    font = pygame.font.Font("Dune_Rise.ttf", 24)
+    font = pygame.font.Font("Media/Fonts/Dune_Rise.ttf", 24)
     text_surface = font.render(f"Click to start", True, (255,0,0))
     text_rect = text_surface.get_rect(center=(525, 135))
     screen.blit(text_surface, text_rect)
-    sound = Sound(os.path.join('lisanalgaib.mp3'))
+    sound = Sound('Media/Sounds/lisanalgaib.mp3')
     sound.play()
     pygame.display.flip()
 
@@ -304,7 +302,7 @@ def main():
                         #SNAKE TIMEEEEEEEE
                         else:
                             cells = paul_muadib_atreides_snake_game(screen, territories, x, y, players[player_turn].color)
-                            sound = Sound(os.path.join('Dune scream song meme.mp3'))
+                            sound = Sound(os.path.join('Media/Sounds/Dune scream song meme.mp3'))
                             sound.play()
 
                             #Unsuccessful

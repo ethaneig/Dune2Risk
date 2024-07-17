@@ -4,6 +4,9 @@ from enum import Enum
 from hud import *
 from snake import snaker as paul_muadib_atreides_snake_game
 
+#This is the original code for the submission, and will likely no longer work
+#Because of changes in the folder structure
+
 # Define colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
